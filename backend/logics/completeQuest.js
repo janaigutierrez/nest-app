@@ -1,5 +1,5 @@
-import Quest from '../models/QuestModel.js'
-import User from '../models/UserModel.js'
+import Quest from '../models/Quest.js'
+import User from '../models/User.js'
 import { validator, errors, rules } from 'common'
 
 const completeQuest = async (userId, questId) => {
