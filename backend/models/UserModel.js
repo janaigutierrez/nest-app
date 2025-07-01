@@ -1,6 +1,6 @@
 import mongoose from 'mongoose'
 import bcrypt from 'bcrypt'
-import { STAT_RULES, XP_RULES } from '../../common/constants/gameRules.js'
+import { STAT_RULES, XP_RULES } from 'common/constants/gameRules.js'
 
 const userSchema = new mongoose.Schema({
     username: {
