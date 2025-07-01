@@ -1,7 +1,7 @@
 import { QuestGenerator } from './questGenerator.js'
 import { StatDetector } from './statDetector.js'
 import { QuestEnhancer } from './questEnhancer.js'
-import { XPCalculator } from './xpCalculator.js'
+import { XPCalculator } from './XPCalculator.js'
 import { FallbackSystem } from './fallbackSystem.js'
 
 export class AIService {

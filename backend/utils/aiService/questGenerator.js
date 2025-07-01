@@ -1,5 +1,5 @@
 import { GroqClient } from './groqClient.js'
-import { XPCalculator } from './xpCalculator.js'
+import { XPCalculator } from './XPCalculator.js'
 import { FallbackSystem } from './fallbackSystem.js'
 
 export class QuestGenerator {

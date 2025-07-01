@@ -1,5 +1,5 @@
 import { StatDetector } from './statDetector.js'
-import { XPCalculator } from './xpCalculator.js'
+import { XPCalculator } from './XPCalculator.js'
 
 export class QuestEnhancer {
     static enhanceManual(questData) {
