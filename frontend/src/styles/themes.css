@@ -1,0 +1,260 @@
+:root {
+    --primary-color: #8b5cf6;
+    --primary-hover: #7c3aed;
+    --background: #f9fafb;
+    --surface: #ffffff;
+    --text-primary: #111827;
+    --text-secondary: #6b7280;
+    --border: #e5e7eb;
+    --shadow: rgba(0, 0, 0, 0.1);
+    --success: #10b981;
+    --warning: #f59e0b;
+    --error: #ef4444;
+}
+
+[data-theme="library"] {
+    --primary-color: #92400e;
+    --primary-hover: #b45309;
+    --background: #fdf4e1;
+    --surface: #fffbeb;
+    --text-primary: #92400e;
+    --text-secondary: #a16207;
+    --border: #fcd34d;
+    --success: #65a30d;
+    --warning: #d97706;
+    --error: #dc2626;
+}
+
+[data-theme="library"] body {
+    background: #fdf4e1 !important;
+    background-image:
+        repeating-linear-gradient(45deg,
+            transparent,
+            transparent 35px,
+            rgba(146, 64, 14, 0.03) 35px,
+            rgba(146, 64, 14, 0.03) 70px),
+        repeating-linear-gradient(-45deg,
+            transparent,
+            transparent 35px,
+            rgba(217, 119, 6, 0.02) 35px,
+            rgba(217, 119, 6, 0.02) 70px) !important;
+}
+
+[data-theme="mystic"] {
+    --primary-color: #7c3aed;
+    --primary-hover: #8b5cf6;
+    --background: #1e1b4b;
+    --surface: #312e81;
+    --text-primary: #e0e7ff;
+    --text-secondary: #c7d2fe;
+    --border: #4c1d95;
+    --success: #a78bfa;
+    --warning: #fbbf24;
+    --error: #f87171;
+}
+
+[data-theme="mystic"] body {
+    background: linear-gradient(135deg, #1e1b4b 0%, #312e81 100%) !important;
+    background-image:
+        radial-gradient(circle at 20% 80%, rgba(124, 58, 237, 0.15) 0%, transparent 50%),
+        radial-gradient(circle at 80% 20%, rgba(167, 139, 250, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 40% 40%, rgba(139, 92, 246, 0.05) 0%, transparent 50%) !important;
+}
+
+[data-theme="mystic"] body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image:
+        radial-gradient(2px 2px at 20px 30px, rgba(255, 255, 255, 0.2), transparent),
+        radial-gradient(1px 1px at 40px 70px, rgba(255, 255, 255, 0.3), transparent),
+        radial-gradient(1px 1px at 90px 40px, rgba(255, 255, 255, 0.1), transparent);
+    background-repeat: repeat;
+    background-size: 150px 100px;
+    pointer-events: none;
+    z-index: -1;
+}
+
+[data-theme="medieval"] {
+    --primary-color: #6b7280;
+    --primary-hover: #4b5563;
+    --background: #374151;
+    --surface: #4b5563;
+    --text-primary: #f3f4f6;
+    --text-secondary: #d1d5db;
+    --border: #6b7280;
+    --success: #059669;
+    --warning: #d97706;
+    --error: #dc2626;
+}
+
+[data-theme="medieval"] body {
+    background: linear-gradient(135deg, #374151 0%, #1f2937 100%) !important;
+    background-image:
+        repeating-linear-gradient(0deg,
+            transparent,
+            transparent 50px,
+            rgba(75, 85, 99, 0.1) 50px,
+            rgba(75, 85, 99, 0.1) 52px),
+        repeating-linear-gradient(90deg,
+            transparent,
+            transparent 50px,
+            rgba(107, 114, 128, 0.05) 50px,
+            rgba(107, 114, 128, 0.05) 52px) !important;
+}
+
+[data-theme="warrior"] {
+    --primary-color: #dc2626;
+    --primary-hover: #b91c1c;
+    --background: #7f1d1d;
+    --surface: #991b1b;
+    --text-primary: #fef2f2;
+    --text-secondary: #fecaca;
+    --border: #b91c1c;
+    --success: #16a34a;
+    --warning: #eab308;
+    --error: #ef4444;
+}
+
+[data-theme="warrior"] body {
+    background: linear-gradient(45deg, #7f1d1d 0%, #991b1b 50%, #7f1d1d 100%) !important;
+    background-image:
+        repeating-linear-gradient(90deg,
+            transparent,
+            transparent 100px,
+            rgba(220, 38, 38, 0.05) 100px,
+            rgba(220, 38, 38, 0.05) 102px) !important;
+}
+
+[data-theme="warrior"] .warrior-accent {
+    background: linear-gradient(45deg, #fbbf24, #f59e0b, #d97706) !important;
+    background-clip: text;
+    -webkit-background-clip: text;
+    color: transparent;
+}
+
+[data-theme="academy"] {
+    --primary-color: #2563eb;
+    --primary-hover: #1d4ed8;
+    --background: #1e3a8a;
+    --surface: #1e40af;
+    --text-primary: #dbeafe;
+    --text-secondary: #bfdbfe;
+    --border: #3b82f6;
+    --success: #10b981;
+    --warning: #f59e0b;
+    --error: #ef4444;
+}
+
+[data-theme="academy"] body {
+    background: linear-gradient(135deg, #1e3a8a 0%, #1e40af 100%) !important;
+    background-image:
+        repeating-linear-gradient(60deg,
+            transparent,
+            transparent 40px,
+            rgba(59, 130, 246, 0.05) 40px,
+            rgba(59, 130, 246, 0.05) 80px) !important;
+}
+
+* {
+    transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+}
+
+
+.btn-primary {
+    background-color: var(--primary-color);
+    color: white;
+    border: 1px solid var(--primary-color);
+}
+
+.btn-primary:hover {
+    background-color: var(--primary-hover);
+    border-color: var(--primary-hover);
+}
+
+.card {
+    background-color: var(--surface);
+    border: 1px solid var(--border);
+    color: var(--text-primary);
+}
+
+.text-primary {
+    color: var(--text-primary);
+}
+
+.text-secondary {
+    color: var(--text-secondary);
+}
+
+.bg-surface {
+    background-color: var(--surface);
+}
+
+.bg-background {
+    background-color: var(--background);
+}
+
+@media (max-width: 768px) {
+
+    [data-theme="mystic"] body::before,
+    [data-theme="library"] body {
+        opacity: 0.7;
+    }
+}
+
+@media (prefers-contrast: high) {
+    :root {
+        --border: #000000;
+        --text-secondary: var(--text-primary);
+    }
+}
+
+.theme-preview {
+    width: 60px;
+    height: 40px;
+    border-radius: 8px;
+    border: 2px solid transparent;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.theme-preview:hover {
+    transform: scale(1.05);
+    border-color: var(--primary-color);
+}
+
+.theme-preview.active {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 2px rgba(139, 92, 246, 0.2);
+}
+
+.theme-preview.default {
+    background: linear-gradient(45deg, #8b5cf6, #f9fafb);
+}
+
+.theme-preview.dark {
+    background: linear-gradient(45deg, #111827, #a78bfa);
+}
+
+.theme-preview.library {
+    background: linear-gradient(45deg, #92400e, #fdf4e1);
+}
+
+.theme-preview.mystic {
+    background: linear-gradient(45deg, #1e1b4b, #7c3aed);
+}
+
+.theme-preview.medieval {
+    background: linear-gradient(45deg, #374151, #6b7280);
+}
+
+.theme-preview.warrior {
+    background: linear-gradient(45deg, #7f1d1d, #dc2626);
+}
+
+.theme-preview.academy {
+    background: linear-gradient(45deg, #1e3a8a, #2563eb);
+}
