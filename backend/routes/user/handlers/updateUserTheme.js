@@ -12,7 +12,10 @@ const updateUserTheme = async (req, res, next) => {
 
         const result = await logic.updateUserTheme(userId, theme)
 
-        res.status(200).json(result)
+        res.status(200).json({
+            success: true,
+            message: 'Updated successfully'
+        })
     } catch (error) {
         next(error)
     }

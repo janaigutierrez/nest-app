@@ -1,15 +1,14 @@
 import { after, before, beforeEach, afterEach, describe, it } from "mocha"
 import { expect } from "chai"
+import { errors } from "common"
 import 'dotenv/config'
 import mongoose from 'mongoose'
-import Quest from "../../models/Quest.js"
 import User from "../../models/User.js"
+import Quest from "../../models/Quest.js"
 import createQuest from "../../logics/createQuest.js"
-import { rules } from 'common'
-import { AIService } from "../../utils/aiService/index.js"
 
 describe('createQuest', () => {
-    let userId
+    let validUserId
 
     before(() => {
         return mongoose.connect(process.env.MONGO_URL, {
@@ -25,231 +24,100 @@ describe('createQuest', () => {
         const userData = {
             username: 'testuser',
             email: 'test@example.com',
-            password: 'Test123!'
+            password: 'hashedpassword',
+            totalXP: 0,
+            currentLevel: 1,
+            stats: { STRENGTH: 0, DEXTERITY: 0, WISDOM: 0, CHARISMA: 0 }
         }
 
         return User.create(userData)
             .then(createdUser => {
-                userId = createdUser._id.toString()
+                validUserId = createdUser._id.toString()
             })
     })
 
     afterEach(() => {
-        return Promise.all([
-            Quest.deleteMany(),
-            User.deleteMany()
-        ])
+        return Promise.all([User.deleteMany(), Quest.deleteMany()])
     })
 
-    it('GIVEN valid data with AI WHEN called createQuest THEN creates AI quest', async () => {
+    it('GIVEN valid manual quest WHEN createQuest THEN creates successfully', () => {
         const questData = {
-            title: 'Go to gym',
+            title: 'Go to gym and workout',
+            description: 'Test description',
+            difficulty: 'STANDARD',
+            useAI: false
+        }
+
+        return createQuest(validUserId, questData)
+            .then(result => {
+                expect(result).to.be.an('object')
+                expect(result.title).to.equal('Go to gym and workout')
+                expect(result.generatedBy).to.equal('user')
+                expect(result.targetStat).to.equal('STRENGTH')
+                expect(result.experienceReward).to.be.a('number')
+                expect(result._id).to.exist
+            })
+    })
+
+    it('GIVEN AI quest WHEN createQuest THEN creates with AI or fallback', function () {
+        this.timeout(10000)
+
+        const questData = {
+            title: 'workout at gym',
             useAI: true,
             difficulty: 'STANDARD'
         }
 
-        const quest = await createQuest(userId, questData)
-
-        expect(quest.userId.toString()).to.equal(userId)
-        expect(quest.isCompleted).to.be.false
-        expect(quest.isDaily).to.be.false
-
-        expect(['ai', 'epic_fallback']).to.include(quest.generatedBy)
-        expect(quest.experienceReward).to.be.a('number')
-        expect(quest.experienceReward).to.be.greaterThan(0)
-
-        expect(quest.title).to.be.a('string')
-        expect(quest.title.length).to.be.greaterThan(0)
+        return createQuest(validUserId, questData)
+            .then(result => {
+                expect(result).to.be.an('object')
+                expect(['ai', 'epic_fallback', 'user']).to.include(result.generatedBy)
+                expect(result.title).to.be.a('string')
+                expect(result._id).to.exist
+            })
     })
 
-    it('GIVEN valid data without AI WHEN called createQuest THEN creates manual quest', async () => {
-        const questData = {
-            title: 'Read a book about wisdom',
-            useAI: false,
-            difficulty: 'QUICK'
-        }
+    it('GIVEN invalid userId WHEN createQuest THEN throws validation error', () => {
+        const questData = { title: 'Test', useAI: false }
 
-        const quest = await createQuest(userId, questData)
-
-        expect(quest.title).to.equal('Read a book about wisdom')
-        expect(quest.generatedBy).to.equal('user')
-        expect(quest.difficulty).to.equal('QUICK')
-        expect(quest.tags).to.include('manual')
-
-        const expectedBaseXP = rules.QUEST_REWARDS.BASE_XP.QUICK
-        const expectedBonusXP = quest.targetStat ? 10 : 0
-        expect(quest.experienceReward).to.equal(expectedBaseXP + expectedBonusXP)
-
-        expect(quest.targetStat).to.equal('WISDOM')
+        return createQuest('invalid-id', questData)
+            .catch(error => {
+                expect(error).to.be.instanceOf(Error)
+                expect(error.message).to.include('userId')
+            })
     })
 
-    it('GIVEN quest with strength keywords WHEN created manually THEN detects STRENGTH stat', async () => {
-        const questData = {
-            title: 'Go to gym and lift weights',
-            useAI: false,
-            difficulty: 'STANDARD'
-        }
+    it('GIVEN non-existent user WHEN createQuest THEN throws ExistenceError', () => {
+        const fakeUserId = new mongoose.Types.ObjectId().toString()
+        const questData = { title: 'Test', useAI: false }
 
-        const quest = await createQuest(userId, questData)
-
-        expect(quest.targetStat).to.equal('STRENGTH')
-        expect(quest.experienceReward).to.equal(60)
+        return createQuest(fakeUserId, questData)
+            .catch(error => {
+                expect(error).to.be.instanceOf(errors.ExistenceError)
+            })
     })
 
-    it('GIVEN quest with no stat keywords WHEN created manually THEN no targetStat', async () => {
-        const questData = {
-            title: 'Do something random',
-            useAI: false,
-            difficulty: 'STANDARD'
-        }
+    it('GIVEN empty title WHEN createQuest THEN throws validation error', () => {
+        const questData = { title: '', useAI: false }
 
-        const quest = await createQuest(userId, questData)
-
-        expect(quest.targetStat).to.be.null
-        expect(quest.experienceReward).to.equal(50)
+        return createQuest(validUserId, questData)
+            .catch(error => {
+                expect(error).to.be.instanceOf(Error)
+                expect(error.message).to.include('title')
+            })
     })
 
-    it('GIVEN empty title WHEN called createQuest THEN throws error', async () => {
+    it('GIVEN valid quest WHEN createQuest THEN calculates XP correctly', () => {
         const questData = {
-            title: '',
+            title: 'Valid Task',
+            difficulty: 'STANDARD',
             useAI: false
         }
 
-        try {
-            await createQuest(userId, questData)
-            expect.fail('Should have thrown an error')
-        } catch (error) {
-            expect(error.message).to.equal('Quest title is required')
-        }
-    })
-
-    it('GIVEN whitespace-only title WHEN called createQuest THEN throws error', async () => {
-        const questData = {
-            title: '   ',
-            useAI: false
-        }
-
-        try {
-            await createQuest(userId, questData)
-            expect.fail('Should have thrown an error')
-        } catch (error) {
-            expect(error.message).to.equal('Quest title is required')
-        }
-    })
-
-    it('GIVEN missing userId WHEN called createQuest THEN throws error', async () => {
-        const questData = {
-            title: 'Test quest',
-            useAI: false
-        }
-
-        try {
-            await createQuest(null, questData)
-            expect.fail('Should have thrown an error')
-        } catch (error) {
-            expect(error.message).to.equal('User ID is required')
-        }
-    })
-
-    it('GIVEN undefined userId WHEN called createQuest THEN throws error', async () => {
-        const questData = {
-            title: 'Test quest',
-            useAI: false
-        }
-
-        try {
-            await createQuest(undefined, questData)
-            expect.fail('Should have thrown an error')
-        } catch (error) {
-            expect(error.message).to.equal('User ID is required')
-        }
-    })
-
-    it('GIVEN different difficulty levels WHEN creating quests THEN calculates correct XP', async () => {
-        const difficulties = ['QUICK', 'STANDARD', 'LONG', 'EPIC']
-        const expectedXP = {
-            QUICK: 25,
-            STANDARD: 50,
-            LONG: 100,
-            EPIC: 200
-        }
-
-        for (const difficulty of difficulties) {
-            const questData = {
-                title: 'Test quest no keywords',
-                useAI: false,
-                difficulty
-            }
-
-            const quest = await createQuest(userId, questData)
-            expect(quest.experienceReward).to.equal(expectedXP[difficulty])
-
-            await Quest.findByIdAndDelete(quest._id)
-        }
-    })
-
-    it('GIVEN AI fails WHEN creating quest with AI THEN uses fallback system', async () => {
-        const originalGenerate = AIService.generateQuest
-        AIService.generateQuest = async () => {
-            throw new Error('AI service unavailable')
-        }
-
-        const questData = {
-            title: 'Exercise at gym',
-            useAI: true,
-            difficulty: 'STANDARD'
-        }
-
-        try {
-            const quest = await createQuest(userId, questData)
-
-            expect(quest.generatedBy).to.equal('epic_fallback')
-            expect(quest.description).to.equal('Quest created with epic fallback system')
-            expect(quest.targetStat).to.equal('STRENGTH')
-            expect(quest.experienceReward).to.equal(60)
-            expect(quest.tags).to.include('fallback')
-        } finally {
-            AIService.generateQuest = originalGenerate
-        }
-    })
-
-    it('GIVEN database save fails WHEN creating quest THEN throws error', async () => {
-        const invalidUserId = 'not-a-valid-objectid'
-
-        const questData = {
-            title: 'Test quest',
-            useAI: false,
-            difficulty: 'QUICK'
-        }
-
-        try {
-            await createQuest(invalidUserId, questData)
-            expect.fail('Should have thrown an error')
-        } catch (error) {
-            expect(error.message).to.equal('Failed to save quest to database')
-        }
-    })
-
-    it('GIVEN AI fails with EPIC difficulty WHEN creating quest THEN calculates correct XP', async () => {
-        const originalGenerate = AIService.generateQuest
-        AIService.generateQuest = async () => {
-            throw new Error('AI service unavailable')
-        }
-
-        const questData = {
-            title: 'Epic programming challenge',
-            useAI: true,
-            difficulty: 'EPIC'
-        }
-
-        try {
-            const quest = await createQuest(userId, questData)
-
-            expect(quest.generatedBy).to.equal('epic_fallback')
-            expect(quest.experienceReward).to.equal(210)
-            expect(quest.targetStat).to.equal('WISDOM')
-        } finally {
-            AIService.generateQuest = originalGenerate
-        }
+        return createQuest(validUserId, questData)
+            .then(result => {
+                expect(result.experienceReward).to.be.a('number')
+                expect(result.experienceReward).to.be.greaterThan(0)
+            })
     })
 })

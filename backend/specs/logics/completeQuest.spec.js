@@ -28,7 +28,7 @@ describe('completeQuest', () => {
             username: 'testuser',
             email: 'test@example.com',
             password: 'Test123!',
-            totalXP: 0,  // FIX: Use totalXP not totalExperience
+            totalXP: 0,
             stats: {
                 STRENGTH: 0,
                 DEXTERITY: 0,
@@ -41,7 +41,7 @@ describe('completeQuest', () => {
             username: 'anotheruser',
             email: 'another@example.com',
             password: 'Test123!',
-            totalXP: 0,  // FIX: Use totalXP not totalExperience
+            totalXP: 0,
             stats: {
                 STRENGTH: 0,
                 DEXTERITY: 0,
@@ -72,7 +72,7 @@ describe('completeQuest', () => {
                     title: 'Already Completed Quest',
                     description: 'This quest is already done',
                     difficulty: 'QUICK',
-                    experienceReward: 25,  // QUICK (25) + no bonus (no targetStat)
+                    experienceReward: 25,
                     targetStat: 'DEXTERITY',
                     userId: userId,
                     isCompleted: true,
@@ -117,7 +117,7 @@ describe('completeQuest', () => {
                 expect(result.statGained).to.equal(25)
 
                 // Check user updates (60 XP not enough to level up from level 1)
-                expect(result.updatedUser.totalXP).to.equal(60)  // FIX: totalXP
+                expect(result.updatedUser.totalXP).to.equal(60)
                 expect(result.updatedUser.stats.STRENGTH).to.equal(25)
                 expect(result.levelUp).to.equal(false) // 60 XP < 100 XP needed for level 2
                 expect(result.newLevel).to.equal(1)
@@ -126,12 +126,12 @@ describe('completeQuest', () => {
 
     it('GIVEN user with high XP WHEN completing quest THEN triggers level up', () => {
         // Set user close to level up (Level 2 requires 100 XP)
-        return User.findByIdAndUpdate(userId, { totalXP: 50 })  // FIX: totalXP
+        return User.findByIdAndUpdate(userId, { totalXP: 50 })
             .then(() => completeQuest(userId, questId))
             .then(result => {
                 expect(result.levelUp).to.equal(true)
                 expect(result.newLevel).to.equal(2) // Should reach level 2
-                expect(result.updatedUser.totalXP).to.equal(110) // FIX: totalXP
+                expect(result.updatedUser.totalXP).to.equal(110)
             })
     })
 
@@ -150,7 +150,7 @@ describe('completeQuest', () => {
             .then(createdQuest => completeQuest(userId, createdQuest._id.toString()))
             .then(result => {
                 expect(result.xpGained).to.equal(25) // No targetStat bonus
-                expect(result.updatedUser.totalXP).to.equal(25)  // FIX: totalXP
+                expect(result.updatedUser.totalXP).to.equal(25)
                 expect(result.updatedUser.stats.STRENGTH).to.equal(0)
                 expect(result.updatedUser.stats.DEXTERITY).to.equal(0)
                 expect(result.updatedUser.stats.WISDOM).to.equal(0)
@@ -187,7 +187,6 @@ describe('completeQuest', () => {
     it('GIVEN non-existent userId WHEN called completeQuest THEN throws ExistenceError', () => {
         const fakeUserId = new mongoose.Types.ObjectId().toString()
 
-        // First create a quest for the fake user to avoid AuthorizationError
         const fakeUserQuestData = {
             title: 'Fake User Quest',
             description: 'Quest for non-existent user',

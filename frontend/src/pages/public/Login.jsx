@@ -1,8 +1,9 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import { validator, errors } from 'common'
+import { validator } from 'common'
 import logics from '../../logic'
 import { useAuth } from '../../context/AuthContext'
+import PasswordInput from '../../components/common/PasswordInput'
 
 function Login() {
     const navigate = useNavigate()
@@ -33,9 +34,6 @@ function Login() {
             validator.password(formData.password, 'password')
 
             const result = await logics.user.loginUser(formData)
-
-
-            console.log('✅ Login successful:', result.user.username)
             await refreshUserData()
             navigate('/')
 
@@ -85,15 +83,14 @@ function Login() {
                             <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1">
                                 Password
                             </label>
-                            <input
+                            <PasswordInput
                                 id="password"
                                 name="password"
-                                type="password"
-                                required
                                 value={formData.password}
                                 onChange={handleChange}
-                                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
                                 placeholder="Enter your password"
+                                showRequirements={false}
+                                required
                             />
                         </div>
                     </div>

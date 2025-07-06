@@ -14,33 +14,38 @@ export function AuthProvider({ children }) {
     }, [])
 
     const loadUserData = async () => {
-
         try {
             const userId = getLoggedUserId()
 
             if (userId) {
-
-                const userData = await logics.user.getUserProfile()
-
-                const userProfile = userData.userProfile || userData
-
+                const userProfile = await logics.user.getUserProfile()
                 setUser(userProfile)
             } else {
                 setUser(null)
             }
         } catch (error) {
-
-            if (error instanceof errors.AuthError) {
+            try {
+                if (error && typeof error.constructor === 'function') {
+                    if (error instanceof errors.AuthError) {
+                        setUser(null)
+                    } else if (error instanceof errors.ExistenceError) {
+                        console.error('❌ User not found:', error.message)
+                        setUser(null)
+                    } else if (error instanceof errors.ConnectionError) {
+                        console.error('🌐 Connection error:', error.message)
+                        setUser(null)
+                    } else {
+                        console.error('❌ Error loading user data:', error.message)
+                        setUser(null)
+                    }
+                } else {
+                    console.error('❌ Unknown error loading user data:', error)
+                    setUser(null)
+                }
+            } catch (checkError) {
+                console.error('❌ Error in error handling:', checkError)
                 setUser(null)
-            } else if (error instanceof errors.ExistenceError) {
-                console.error('❌ User not found:', error.message)
-                setUser(null)
-            } else if (error instanceof errors.ConnectionError) {
-                console.error('🌐 Connection error:', error.message)
-            } else {
-                console.error('❌ Error loading user data:', error.message)
             }
-            setUser(null)
         } finally {
             setLoading(false)
         }
@@ -56,16 +61,19 @@ export function AuthProvider({ children }) {
         try {
             const userId = getLoggedUserId()
             if (userId) {
-                const userData = await logics.user.getUserProfile()
-
-                const userProfile = userData.userProfile || userData
+                const userProfile = await logics.user.getUserProfile()
                 setUser(userProfile)
             }
         } catch (error) {
-            if (error instanceof errors.AuthError) {
+            try {
+                if (error && typeof error.constructor === 'function' && error instanceof errors.AuthError) {
+                    setUser(null)
+                } else {
+                    console.error('❌ Error refreshing user data:', error.message)
+                }
+            } catch (checkError) {
+                console.error('❌ Error in refresh error handling:', checkError)
                 setUser(null)
-            } else {
-                console.error('❌ Error refreshing user data:', error.message)
             }
         }
     }

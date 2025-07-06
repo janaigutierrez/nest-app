@@ -1,12 +1,11 @@
-import { STAT_RULES } from '../../../common/constants/gameRules.js'
+import { rules } from 'common'
+const { STAT_RULES } = rules
 
 export class StatDetector {
     static detectQuestStat(text) {
-        // Try gameRules first
         const gameRulesStat = STAT_RULES.detectStatFromDescription(text)
         if (gameRulesStat) return gameRulesStat
 
-        // Simple fallback
         const lower = text.toLowerCase()
 
         if (/gym|ejercicio|deporte|entrenar|músculo|correr|caminar/.test(lower)) return 'STRENGTH'

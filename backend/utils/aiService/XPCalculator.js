@@ -1,4 +1,6 @@
-import { QUEST_REWARDS } from '../../../common/constants/gameRules.js'
+import { rules } from "common"
+
+const { QUEST_REWARDS } = rules
 
 export class XPCalculator {
     static getBaseXP(difficulty) {

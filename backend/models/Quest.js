@@ -38,7 +38,7 @@ const questSchema = new mongoose.Schema({
 
     targetStat: {
         type: String,
-        enum: ['STRENGTH', 'DEXTERITY', 'WISDOM', 'CHARISMA'],
+        enum: ['STRENGTH', 'DEXTERITY', 'WISDOM', 'CHARISMA', null],
         default: null
     },
 

@@ -4,13 +4,16 @@ import logic from "../../../logics/index.js"
 const updateUserUsername = async (req, res, next) => {
     try {
         const userId = req.user.id.toString()
-        const { username } = req.body
+        const { newUsername } = req.body
 
-        validator.username(username)
+        validator.username(newUsername)
 
-        const result = await logic.updateUserUsername(userId, username)
+        const result = await logic.updateUserUsername(userId, newUsername)
 
-        res.status(200).json(result)
+        res.status(200).json({
+            success: true,
+            message: 'Updated successfully'
+        })
     } catch (error) {
         next(error)
     }

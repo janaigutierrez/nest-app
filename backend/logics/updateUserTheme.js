@@ -1,8 +1,9 @@
-import { errors, validator } from 'common'
+import { errors, validator, rules } from 'common'
 import User from '../models/User.js'
 
 const updateUserTheme = async (userId, theme) => {
     validator.id(userId, 'userId')
+    validator.text(theme, 20, 3, 'theme')
 
     const validThemes = ['default', 'dark', 'library', 'mystic', 'medieval', 'warrior', 'academy']
     if (!validThemes.includes(theme)) {

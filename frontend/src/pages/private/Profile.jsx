@@ -1,15 +1,18 @@
 import Header from '../../components/common/Header'
 import Avatar from '../../components/common/Avatar'
 import { useAuth } from '../../context/AuthContext'
+import { useTheme } from '../../context/ThemeContext'
 import { useNotifications } from '../../context/NotificationContext'
 import { getUnlockedSets, avatarSetInfo } from '../../assets/avatars'
 import { useState } from 'react'
 import updateEmail from '../../logic/user/updateEmail'
 import updatePassword from '../../logic/user/updatePassword'
 import updateUsername from '../../logic/user/updateUsername'
+import PasswordInput from '../../components/common/PasswordInput'
 
 function Profile() {
     const { user, updateUserAvatar, logout, refreshUserData } = useAuth()
+    const { theme, setTheme } = useTheme()
     const { showSuccess, showError, showInfo } = useNotifications()
     const [forms, setForms] = useState({
         username: user?.username || '',
@@ -67,6 +70,11 @@ function Profile() {
         }
     }
 
+    const handleThemeChange = (themeId) => {
+        setTheme(themeId)
+        showSuccess(`🎨 ${themeId.charAt(0).toUpperCase() + themeId.slice(1)} theme activated!`)
+    }
+
     return (
         <div className="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors">
             <Header />
@@ -119,28 +127,25 @@ function Profile() {
                     </form>
 
                     <form onSubmit={(e) => handleSubmit('password', e)} className="space-y-2">
-                        <input
-                            type="password"
+                        <PasswordInput
                             value={forms.currentPassword}
                             onChange={(e) => setForms({ ...forms, currentPassword: e.target.value })}
                             placeholder="Current password"
-                            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:ring-2 focus:ring-purple-500 focus:outline-none bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 transition-colors"
+                            showRequirements={false}
                             required
                         />
-                        <input
-                            type="password"
+                        <PasswordInput
                             value={forms.newPassword}
                             onChange={(e) => setForms({ ...forms, newPassword: e.target.value })}
                             placeholder="New password"
-                            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:ring-2 focus:ring-purple-500 focus:outline-none bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 transition-colors"
-                            minLength="6" required
+                            showRequirements={true}
+                            required
                         />
-                        <input
-                            type="password"
+                        <PasswordInput
                             value={forms.confirmPassword}
                             onChange={(e) => setForms({ ...forms, confirmPassword: e.target.value })}
                             placeholder="Confirm new password"
-                            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:ring-2 focus:ring-purple-500 focus:outline-none bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 transition-colors"
+                            showRequirements={false}
                             required
                         />
                         <button
@@ -180,48 +185,62 @@ function Profile() {
                 </div>
 
                 <div className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-md border border-gray-200 dark:border-gray-700 transition-colors">
-                    <h3 className="text-lg font-bold mb-4 text-gray-900 dark:text-gray-100">🎨 Themes</h3>
+                    <div className="flex items-center justify-between mb-4">
+                        <h3 className="text-lg font-bold text-gray-900 dark:text-gray-100">🎨 Themes</h3>
+                        <div className="text-sm text-gray-500 dark:text-gray-400">
+                            Current: <span className="font-medium capitalize">{theme}</span>
+                        </div>
+                    </div>
+
                     <div className="grid grid-cols-3 gap-2">
                         {[
                             { id: 'default', name: 'Default', emoji: '🌟', level: 1 },
-                            { id: 'library', name: 'Library', emoji: '📚', level: 5 },
-                            { id: 'mystic', name: 'Mystic', emoji: '🔮', level: 7 },
+                            { id: 'library', name: 'Library', emoji: '📚', level: 4 },
+                            { id: 'mystic', name: 'Mystic', emoji: '🔮', level: 6 },
                             { id: 'medieval', name: 'Medieval', emoji: '🏰', level: 8 },
                             { id: 'warrior', name: 'Warrior', emoji: '⚔️', level: 10 },
                             { id: 'academy', name: 'Academy', emoji: '🏛️', level: 12 }
-                        ].map(theme => {
-                            const isUnlocked = (user.currentLevel || 1) >= theme.level
-                            const currentTheme = localStorage.getItem('theme') || 'default'
-                            const isActive = currentTheme === theme.id
+                        ].map(themeData => {
+                            const isUnlocked = (user.currentLevel || 1) >= themeData.level
+                            const isActive = theme === themeData.id
 
                             return (
                                 <button
-                                    key={theme.id}
+                                    key={themeData.id}
                                     onClick={() => {
                                         if (isUnlocked) {
-                                            localStorage.setItem('theme', theme.id)
-                                            document.documentElement.setAttribute('data-theme', theme.id)
-                                            showSuccess(`${theme.emoji} ${theme.name} theme activated!`)
+                                            handleThemeChange(themeData.id)
                                         } else {
-                                            showInfo(`${theme.emoji} ${theme.name} unlocks at Level ${theme.level}`)
+                                            showInfo(`${themeData.emoji} ${themeData.name} unlocks at Level ${themeData.level}`)
                                         }
                                     }}
-                                    className={`p-2 text-sm border rounded-md transition-all ${isActive
-                                            ? 'border-purple-500 bg-purple-50 dark:bg-purple-900 text-purple-700 dark:text-purple-300'
-                                            : isUnlocked
-                                                ? 'border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700 text-gray-900 dark:text-gray-100'
-                                                : 'border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-400 dark:text-gray-500 opacity-50'
+                                    className={`p-2 text-sm border rounded-md transition-all relative ${isActive
+                                        ? 'border-purple-500 bg-purple-50 dark:bg-purple-900 text-purple-700 dark:text-purple-300 ring-2 ring-purple-200 dark:ring-purple-800'
+                                        : isUnlocked
+                                            ? 'border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700 text-gray-900 dark:text-gray-100 hover:border-purple-300 dark:hover:border-purple-600'
+                                            : 'border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-400 dark:text-gray-500 opacity-50 cursor-not-allowed'
                                         }`}
                                     disabled={!isUnlocked}
                                 >
                                     <div className="flex flex-col items-center">
-                                        <span className="text-lg">{theme.emoji}</span>
-                                        <span className="text-xs font-medium">{theme.name}</span>
-                                        {!isUnlocked && <span className="text-xs">Lv.{theme.level}</span>}
+                                        <span className="text-lg">{themeData.emoji}</span>
+                                        <span className="text-xs font-medium">{themeData.name}</span>
+                                        {!isUnlocked && <span className="text-xs">Lv.{themeData.level}</span>}
                                     </div>
+                                    {isActive && (
+                                        <div className="absolute top-1 right-1">
+                                            <div className="w-2 h-2 bg-purple-500 rounded-full border border-white dark:border-gray-800"></div>
+                                        </div>
+                                    )}
                                 </button>
                             )
                         })}
+                    </div>
+
+                    {/* Info note */}
+                    <div className="mt-4 text-sm text-gray-500 dark:text-gray-400 bg-gray-50 dark:bg-gray-800 p-3 rounded-lg">
+                        <strong>Note:</strong> While using a visual theme, the dark/light mode toggle will be disabled.
+                        Switch back to "Default" to use dark mode.
                     </div>
                 </div>
 

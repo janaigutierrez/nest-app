@@ -1,0 +1,2 @@
+curl -v -X DELETE http://localhost:4321/api/quests/6866f66e0da83951258245d1 \
+  -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2ODY2ZjRjZDBkYTgzOTUxMjU4MjQ1YmQiLCJpYXQiOjE3NTE1Nzc4MDUsImV4cCI6MTc1MjE4MjYwNX0.nkpC34M1vjtgKFvKDp-_IGxE1tgmW-IjvtG3VIZT5PY"

@@ -26,14 +26,13 @@ const createQuest = ({ title, useAI = false, difficulty = 'STANDARD' }) => {
         .catch(error => { throw new errors.ConnectionError(error.message) })
         .then((response) => {
             if (response.status === 201) {
-                return response.json()
+                return response.json().then(data => data.data.quest)
             } else {
                 return response.json().then(body => {
-                    console.log('🔍 Backend error response:', body) // Debug
+                    const errorMessage = body.error || body.message || 'Unknown error occurred'
 
-                    // ✅ FIX: Manejar errores desconocidos
                     const ErrorClass = errors[body.name] || errors.ServerError
-                    throw new ErrorClass(body.message || 'Unknown error occurred')
+                    throw new ErrorClass(errorMessage)
                 })
             }
         })

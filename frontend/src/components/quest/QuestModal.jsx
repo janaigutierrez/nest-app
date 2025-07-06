@@ -29,6 +29,7 @@ function QuestModal() {
             setLocalError('')
             setGeneratedQuest(null)
 
+
             const createdQuest = await addQuest({
                 title: userInput.trim(),
                 useAI: true,
@@ -38,8 +39,30 @@ function QuestModal() {
             setGeneratedQuest(createdQuest)
 
         } catch (error) {
-            console.error('Error generating quest:', error)
-            setLocalError(error.message || 'Error generating quest.')
+            console.error('❌ Full error details:', {
+                message: error.message,
+                stack: error.stack,
+                name: error.name,
+                cause: error.cause
+            })
+
+            let errorMessage = 'Failed to create quest'
+
+            if (error.message?.includes('Failed to save quest to database')) {
+                errorMessage = 'Database error - please try again'
+            } else if (error.message?.includes('AI service')) {
+                errorMessage = 'AI service temporarily unavailable'
+            } else if (error.message?.includes('validation failed')) {
+                errorMessage = 'Quest data validation failed - try a simpler description'
+            } else if (error.message?.includes('targetStat')) {
+                errorMessage = 'Stat detection failed - try manual quest instead'
+            } else if (error.message?.includes('network') || error.message?.includes('fetch')) {
+                errorMessage = 'Network error - check your connection'
+            } else if (error.message) {
+                errorMessage = error.message
+            }
+
+            setLocalError(errorMessage)
         } finally {
             setIsGenerating(false)
         }

@@ -1,0 +1,58 @@
+{
+    "name": "express",
+    "version": "1.0.0",
+    "type": "module",
+    "main": "index.js",
+    "scripts": {
+        "start": "node index.js",
+        "dev": "nodemon index.js",
+        "test": "mocha specs//*.spec.js",
+        "test:coverage": "c8 --all mocha specs//.spec.js",
+        "coverage:report": "c8 --all report --reporter=html"
+    },
+    "author": "",
+    "license": "ISC",
+    "description": "",
+    "dependencies": {
+        "bcrypt": "^6.0.0",
+        "common": "file:../common",
+        "cors": "^2.8.5",
+        "dotenv": "^16.5.0",
+        "express": "^4.19.2",
+        "groq-sdk": "^0.23.0",
+        "jsonwebtoken": "^9.0.2",
+        "mongoose": "^8.15.1"
+    },
+    "devDependencies": {
+        "chai": "^5.2.0",
+        "c8": "^11.1.1",
+        "mocha": "^11.5.0",
+        "nodemon": "^3.1.10",
+        "supertest": "^7.1.1"
+    },
+    "c8": {
+        "exclude": [
+            "node_modules/",
+            "curl/",
+            "coverage/**",
+            ".config.js",
+            "specs/",
+            "/*.spec.js",
+            "/index.js",
+            "config/database.js",
+            "models/quest.js",
+            "models/user.js",
+            "routes/",
+            "middleware/errorHandler.js",
+            "utils/aiService/groqClient.js",
+            "utils/aiService/questGenerator.js",
+            "models/**",
+            "middleware/auth.js"
+        ],
+        "reporter": [
+            "text",
+            "html"
+        ],
+        "reports-dir": "./coverage"
+    }
+}

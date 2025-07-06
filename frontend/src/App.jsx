@@ -4,9 +4,8 @@ import { useLocation, useNavigate } from "react-router-dom"
 import Private from "./routes/Private"
 import Public from "./routes/Public"
 import { isAuthenticated } from "./logic/helpers/getLoggedUserId"
-import { NotificationProvider } from './context/NotificationContext'
+import LevelUpModal from './components/common/LevelUpModal'
 import './index.css'
-import { ThemeProvider } from './context/ThemeContext'
 import './styles/themes.css'
 
 const App = () => {
@@ -31,21 +30,18 @@ const App = () => {
     }, [location.pathname, refreshHeader])
 
     return (
-        <ThemeProvider>
-            <NotificationProvider>
-                {isUserLogged ? (
-                    <Private
-                        setRefreshHeader={setRefreshHeader}
-                        logout={onLogoutClick}
-                    />
-                ) : (
-                    <>
-                        <Public setRefreshHeader={setRefreshHeader} />
-                    </>
-                )}
-            </NotificationProvider>
-        </ThemeProvider>
+        <>
+            {isUserLogged ? (
+                <Private
+                    setRefreshHeader={setRefreshHeader}
+                    logout={onLogoutClick}
+                />
+            ) : (
+                <Public setRefreshHeader={setRefreshHeader} />
+            )}
 
+            {isUserLogged && <LevelUpModal />}
+        </>
     )
 }
 

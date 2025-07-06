@@ -5,7 +5,7 @@ const tokenBlacklistSchema = new mongoose.Schema({
         type: String,
         required: true,
         unique: true,
-        index: true  // Para búsquedas rápidas
+        index: true
     },
     userId: {
         type: mongoose.Schema.Types.ObjectId,
@@ -15,7 +15,7 @@ const tokenBlacklistSchema = new mongoose.Schema({
     expiresAt: {
         type: Date,
         required: true,
-        index: { expireAfterSeconds: 0 }  // MongoDB auto-elimina documentos expirados
+        index: { expireAfterSeconds: 0 }
     },
     createdAt: {
         type: Date,
@@ -25,7 +25,6 @@ const tokenBlacklistSchema = new mongoose.Schema({
     timestamps: true
 })
 
-// Índice compuesto para optimizar búsquedas
 tokenBlacklistSchema.index({ token: 1, expiresAt: 1 })
 
 const TokenBlacklist = mongoose.model('TokenBlacklist', tokenBlacklistSchema)

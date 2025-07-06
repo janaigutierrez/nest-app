@@ -24,8 +24,8 @@ const register = ({ username, email, password, confirmPassword }) => {
         .then((response) => {
             if (response.status === 201) {
                 return response.json().then(data => {
-                    localStorage.setItem('authToken', data.token)
-                    return data
+                    localStorage.setItem('authToken', data.data.token)
+                    return data.data
                 })
             } else {
                 return response.json().then(body => {

@@ -1,6 +1,6 @@
+import { errors, validator, rules } from 'common'
 import Quest from '../models/Quest.js'
 import { AIService } from '../utils/aiService/index.js'
-import { rules } from 'common'
 
 /**
  * Create a new quest for a user (AI or Manual)
@@ -10,15 +10,11 @@ import { rules } from 'common'
  */
 
 export const createQuest = async (userId, questData) => {
+    validator.id(userId, 'userId')
+
     const { title, useAI, difficulty = 'STANDARD' } = questData
 
-    if (!title || !title.trim()) {
-        throw new Error('Quest title is required')
-    }
-
-    if (!userId) {
-        throw new Error('User ID is required')
-    }
+    validator.text(title, 100, 3, 'title')
 
     let questInfo
 
@@ -60,6 +56,7 @@ export const createQuest = async (userId, questData) => {
             aiMetadata: null
         }
     }
+
     const quest = new Quest({
         ...questInfo,
         userId,
@@ -72,8 +69,8 @@ export const createQuest = async (userId, questData) => {
         const savedQuest = await quest.save()
         return savedQuest
     } catch (error) {
-        console.error('❌ Error saving quest to MongoDB:', error)
-        throw new Error('Failed to save quest to database')
+        console.error('Error saving quest to MongoDB:', error)
+        throw new errors.ValidationError('Failed to save quest to database')
     }
 }
 

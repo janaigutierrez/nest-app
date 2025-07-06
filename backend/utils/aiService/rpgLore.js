@@ -8,7 +8,7 @@ export const LORE = {
     },
     DEXTERITY: {
         realm: "Taller de Creación",
-        actions: ["crear", "craftar", "perfeccionar"],
+        actions: ["crear", "craftear", "perfeccionar", "dominar"],
         enemies: ["caos", "torpeza"],
         weapons: ["habilidad", "precisión"],
         places: ["estudio", "cocina", "taller"]

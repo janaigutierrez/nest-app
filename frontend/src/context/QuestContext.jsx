@@ -2,6 +2,7 @@ import { createContext, useContext, useState, useEffect } from 'react'
 import { rules } from 'common'
 import logics from '../logic'
 import { useAuth } from './AuthContext'
+import { useNotifications } from './NotificationContext'
 import getLoggedUserId from '../logic/helpers/getLoggedUserId'
 
 const QuestContext = createContext()
@@ -20,7 +21,11 @@ export const QuestProvider = ({ children }) => {
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState(null)
 
+    const [showLevelUpModal, setShowLevelUpModal] = useState(false)
+    const [levelUpData, setLevelUpData] = useState(null)
+
     const { user, refreshUserData } = useAuth()
+    const { showSuccess, showError } = useNotifications()
 
     useEffect(() => {
         initializeData()
@@ -30,7 +35,6 @@ export const QuestProvider = ({ children }) => {
         try {
             setLoading(true)
             setError(null)
-
             await loadQuestsData()
         } catch (error) {
             console.error('Error initializing data:', error)
@@ -41,32 +45,21 @@ export const QuestProvider = ({ children }) => {
     }
 
     const loadQuestsData = async () => {
-        try {
-            // ✅ FIX: Verificar si hay usuario antes de cargar
-            const userId = getLoggedUserId()
-            if (!userId) {
-                console.log('🔍 No user logged in, skipping quest load')
-                setQuests([])
-                return
-            }
+        const userId = getLoggedUserId()
 
-            const response = await logics.quest.getAllQuests()
-            const questsArray = response.quests || response
-            setQuests(questsArray)
-        } catch (error) {
-            // ✅ FIX: Solo mostrar error si hay usuario logueado
-            const userId = getLoggedUserId()
-            if (userId) {
-                console.error('Error loading quests:', error)
-            } else {
-                console.log('🔍 Quest load failed - user not logged in (expected after logout)')
-            }
+        if (!userId) {
             setQuests([])
+            return
+        }
 
-            // ✅ FIX: Solo throw error si hay usuario (error inesperado)
-            if (userId) {
-                throw error
-            }
+        try {
+            const response = await logics.quest.getAllQuests()
+            const questsArray = response || []
+            const validQuests = questsArray.filter(quest => quest && quest._id)
+            setQuests(validQuests)
+        } catch (error) {
+            setQuests([])
+            throw error
         }
     }
 
@@ -80,6 +73,17 @@ export const QuestProvider = ({ children }) => {
         return rules.UNLOCK_RULES.getNextUnlock(user.currentLevel)
     }
 
+    const handleLevelUp = (levelUpInfo) => {
+        setLevelUpData(levelUpInfo)
+        setShowLevelUpModal(true)
+        showSuccess(`🎉 Level Up! Welcome to Level ${levelUpInfo.newLevel}!`)
+    }
+
+    const closeLevelUpModal = () => {
+        setShowLevelUpModal(false)
+        setLevelUpData(null)
+    }
+
     const addQuest = async (questData) => {
         try {
             setError(null)
@@ -87,15 +91,15 @@ export const QuestProvider = ({ children }) => {
             const createdQuest = response.quest
 
             setQuests(prev => {
-                const prevArray = Array.isArray(prev) ? prev : (prev?.quests || [])
+                const prevArray = Array.isArray(prev) ? prev : []
                 return [createdQuest, ...prevArray]
             })
 
             setIsQuestModalOpen(false)
             return createdQuest
         } catch (error) {
-            console.error('❌ Error creating quest:', error)
             setError(error.message)
+            showError(error.message)
             throw error
         }
     }
@@ -105,21 +109,28 @@ export const QuestProvider = ({ children }) => {
             setError(null)
             const result = await logics.quest.completeQuest(questId)
 
-            setQuests(prev => prev.map(q =>
-                q._id === questId ? result.updatedQuest : q
-            ))
+            setQuests(prev => {
+                if (!Array.isArray(prev)) return []
+                return prev.map(q => {
+                    if (!q || !q._id) return q
+                    return q._id === questId ? result.updatedQuest : q
+                }).filter(Boolean)
+            })
 
             await refreshUserData()
 
             if (result.levelUp) {
-                console.log(`🎉 LEVEL UP! Welcome to Level ${result.updatedUser.level}!`)
-                // TODO: level up modal 
+                handleLevelUp({
+                    oldLevel: result.oldLevel,
+                    newLevel: result.newLevel,
+                    newUnlocks: result.newUnlocks || []
+                })
             }
 
             return result
         } catch (error) {
-            console.error('❌ Error completing quest:', error)
             setError(error.message)
+            showError(error.message)
             throw error
         }
     }
@@ -127,114 +138,72 @@ export const QuestProvider = ({ children }) => {
     const abandonQuest = async (questId) => {
         try {
             setError(null)
-            const deleted = await logics.quest.deleteQuest(questId)
+            await logics.quest.deleteQuest(questId)
 
-            setQuests(prev => prev.filter(quest => quest._id !== questId))
+            setQuests(prev => {
+                if (!Array.isArray(prev)) return []
+                return prev.filter(quest => quest && quest._id !== questId)
+            })
 
-            return deleted
         } catch (error) {
-            console.error('❌ Error abandoning quest:', error)
             setError(error.message)
+            showError(error.message)
             throw error
         }
     }
 
-    const updateQuest = async (questId, updates) => {
-        try {
-            setError(null)
-            const updatedQuest = await logics.quest.updateQuest(questId, updates)
-
-            setQuests(prev => prev.map(q =>
-                q._id === questId ? updatedQuest : q
-            ))
-
-            return updatedQuest
-        } catch (error) {
-            console.error('❌ Error updating quest:', error)
-            setError(error.message)
-            throw error
-        }
+    const getActiveQuests = () => {
+        if (!Array.isArray(quests)) return []
+        return quests.filter(quest => quest && !quest.isCompleted)
     }
 
-    const uncompleteQuest = async (questId) => {
-        try {
-            setError(null)
-            const result = await logics.quest.uncompleteQuest(questId)
-
-            setQuests(prev => prev.map(q =>
-                q._id === questId ? result.updatedQuest : q
-            ))
-
-            await refreshUserData()
-
-            return result
-        } catch (error) {
-            console.error('❌ Error uncompleting quest:', error)
-            setError(error.message)
-            throw error
-        }
+    const getCompletedQuests = () => {
+        if (!Array.isArray(quests)) return []
+        return quests.filter(quest => quest && quest.isCompleted)
     }
 
-    const getActiveQuests = async () => {
-        try {
-            return await logics.quest.getActiveQuests()
-        } catch (error) {
-            console.error('❌ Error getting active quests:', error)
-            return []
-        }
+    const getQuestsByDifficulty = (difficulty) => {
+        if (!Array.isArray(quests)) return []
+        return quests.filter(quest => quest && quest.difficulty === difficulty)
     }
 
-    const getCompletedQuests = async () => {
-        try {
-            return await logics.quest.getCompletedQuests()
-        } catch (error) {
-            console.error('❌ Error getting completed quests:', error)
-            return []
-        }
-    }
-
-    const getQuestsByDifficulty = async (difficulty) => {
-        try {
-            return await logics.quest.getQuestsByDifficulty(difficulty)
-        } catch (error) {
-            console.error('❌ Error getting quests by difficulty:', error)
-            return []
-        }
-    }
-
-    const getQuestsByStat = async (stat) => {
-        try {
-            return await logics.quest.getQuestsByStat(stat)
-        } catch (error) {
-            console.error('❌ Error getting quests by stat:', error)
-            return []
-        }
+    const getQuestsByStat = (stat) => {
+        if (!Array.isArray(quests)) return []
+        return quests.filter(quest => quest && quest.targetStat === stat)
     }
 
     const openQuestModal = () => setIsQuestModalOpen(true)
     const closeQuestModal = () => setIsQuestModalOpen(false)
-
     const clearError = () => setError(null)
+
+    const refreshQuests = async () => {
+        try {
+            await loadQuestsData()
+        } catch (error) {
+            console.error('Error refreshing quests:', error)
+        }
+    }
 
     const value = {
         quests,
         loading,
         error,
         isQuestModalOpen,
-
-        isFeatureUnlocked,
-        getNextUnlock,
+        showLevelUpModal,
+        levelUpData,
         addQuest,
         completeQuest,
         abandonQuest,
-        updateQuest,
-        uncompleteQuest,
+        refreshQuests,
         getActiveQuests,
         getCompletedQuests,
         getQuestsByDifficulty,
         getQuestsByStat,
+        isFeatureUnlocked,
+        getNextUnlock,
         openQuestModal,
         closeQuestModal,
+        closeLevelUpModal,
         clearError
     }
 

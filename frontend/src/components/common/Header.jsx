@@ -1,16 +1,18 @@
 import { Link, useLocation } from 'react-router-dom'
 import { useAuth } from '../../context/AuthContext'
-import Avatar from './Avatar'
+import { useTheme } from '../../context/ThemeContext'
 import { getStaticAvatarSprite } from '../../assets/avatars'
 import { rules } from 'common'
 import { useState, useEffect } from 'react'
 
 function Header() {
     const { user, loading } = useAuth()
+    const { theme } = useTheme()
     const location = useLocation()
     const [isDarkMode, setIsDarkMode] = useState(false)
 
-    // Load dark mode from localStorage on mount
+    const isDarkButtonDisabled = theme !== 'default'
+
     useEffect(() => {
         const savedDarkMode = localStorage.getItem('darkMode')
         if (savedDarkMode) {
@@ -26,14 +28,12 @@ function Header() {
         const newDarkMode = !isDarkMode
         setIsDarkMode(newDarkMode)
 
-        // Update DOM
         if (newDarkMode) {
             document.documentElement.classList.add('dark')
         } else {
             document.documentElement.classList.remove('dark')
         }
 
-        // Save to localStorage
         localStorage.setItem('darkMode', JSON.stringify(newDarkMode))
     }
 
@@ -61,7 +61,6 @@ function Header() {
 
     const isActive = (path) => location.pathname === path
 
-    // Check if dark mode is unlocked (Level 2+)
     const isDarkModeUnlocked = rules.UNLOCK_RULES.isUnlocked('DARK_MODE', user.currentLevel || 1)
 
     return (
@@ -117,8 +116,7 @@ function Header() {
                     </nav>
 
                     <div className="flex items-center gap-3">
-                        {/* Dark Mode Toggle */}
-                        {isDarkModeUnlocked ? (
+                        {isDarkModeUnlocked && !isDarkButtonDisabled ? (
                             <button
                                 onClick={toggleDarkMode}
                                 className="p-2 rounded-lg bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors"
@@ -133,7 +131,9 @@ function Header() {
                         ) : (
                             <div
                                 className="p-2 rounded-lg bg-gray-100 dark:bg-gray-700 opacity-50 cursor-not-allowed"
-                                title={`Dark Mode unlocks at Level 2 (Current: Level ${user.currentLevel || 1})`}
+                                title={isDarkButtonDisabled ?
+                                    `Dark mode disabled while using ${theme} theme` :
+                                    `Dark Mode unlocks at Level 2 (Current: Level ${user.currentLevel || 1})`}
                             >
                                 <span className="text-gray-400 text-lg">🔒</span>
                             </div>

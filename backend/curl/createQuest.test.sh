@@ -1,8 +1,8 @@
 curl -v -X POST http://localhost:4321/api/quests/create \
   -H "Content-Type: application/json" \
-  -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2ODU0N2VlNzc1OTRkM2MzNDc1ZjA3MzAiLCJpYXQiOjE3NTA2OTMwNDMsImV4cCI6MTc1MTI5Nzg0M30.D9DUWyiVRZ4qMlEJTqnlI92vaqhelQjGM0PA2xxaw5g" \
+  -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2ODY2ZjRjZDBkYTgzOTUxMjU4MjQ1YmQiLCJpYXQiOjE3NTE1Nzc4MDUsImV4cCI6MTc1MjE4MjYwNX0.nkpC34M1vjtgKFvKDp-_IGxE1tgmW-IjvtG3VIZT5PY" \
   -d '{
-    "title": "Go to the gym",
-    "useAI": true,
+    "title": "Test quest for cURL",
+    "useAI": false,
     "difficulty": "STANDARD"
   }'

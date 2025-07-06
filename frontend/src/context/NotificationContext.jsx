@@ -6,7 +6,7 @@ export function NotificationProvider({ children }) {
     const [notifications, setNotifications] = useState([])
 
     const addNotification = (message, type = 'success') => {
-        const id = Date.now()
+        const id = Date.now() + Math.random()
         const notification = { id, message, type }
 
         setNotifications(prev => [...prev, notification])
@@ -47,10 +47,10 @@ function NotificationContainer() {
                 <div
                     key={notification.id}
                     className={`p-4 rounded-lg shadow-lg max-w-sm transform transition-all duration-300 animate-in slide-in-from-top-2 ${notification.type === 'success'
-                            ? 'bg-green-500 text-white'
-                            : notification.type === 'error'
-                                ? 'bg-red-500 text-white'
-                                : 'bg-blue-500 text-white'
+                        ? 'bg-green-500 text-white'
+                        : notification.type === 'error'
+                            ? 'bg-red-500 text-white'
+                            : 'bg-blue-500 text-white'
                         }`}
                 >
                     <div className="flex items-center justify-between">

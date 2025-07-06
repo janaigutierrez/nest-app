@@ -27,7 +27,7 @@ export class QuestGenerator {
     buildSystemPrompt() {
         return `Eres un Quest Master que transforma tareas diarias en aventuras épicas.
 
-OBJETIVO: Hacer las tareas aburridas épicas pero SIMPLES y CLARAS.
+OBJETIVO: Hacer las tareas aburridas épicas pero SIMPLES y CLARAS. Sobretodo, responde en el idioma en que te escriban.
 
 EJEMPLOS:
 "ir al gimnasio" → "Entrenar en el templo del hierro" 
@@ -82,12 +82,14 @@ FORMATO JSON:
     }
 
     processAIResponse(aiResponse, originalPrompt) {
-        // Validate required fields
-        if (!aiResponse.title || !aiResponse.targetStat || !aiResponse.difficulty) {
+        if (!aiResponse.title || !aiResponse.difficulty) {
             throw new Error('AI response missing required fields')
         }
 
-        // Calculate XP
+        if (aiResponse.targetStat === 'null' || aiResponse.targetStat === 'NULL' || aiResponse.targetStat === '') {
+            aiResponse.targetStat = null
+        }
+
         const experienceReward = XPCalculator.calculateQuestXP(
             XPCalculator.getBaseXP(aiResponse.difficulty),
             aiResponse.isDaily || false,
@@ -95,7 +97,7 @@ FORMATO JSON:
         ) + 10 // AI bonus
 
         return {
-            title: aiResponse.title.substring(0, 80), // Limit length
+            title: aiResponse.title.substring(0, 80),
             description: aiResponse.description || `Completa: ${originalPrompt}`,
             targetStat: aiResponse.targetStat,
             difficulty: aiResponse.difficulty,

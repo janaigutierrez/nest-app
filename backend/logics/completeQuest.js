@@ -6,6 +6,7 @@ const completeQuest = async (userId, questId) => {
     validator.id(userId, 'user ID')
     validator.id(questId, 'quest ID')
 
+    // Find quest and verify ownership
     const quest = await Quest.findById(questId)
     if (!quest) {
         throw new errors.ExistenceError('quest not found')
@@ -19,11 +20,13 @@ const completeQuest = async (userId, questId) => {
         throw new errors.DuplicateError('quest already completed')
     }
 
+    // Find user
     const user = await User.findById(userId)
     if (!user) {
         throw new errors.ExistenceError('user not found')
     }
 
+    // Calculate XP and stat gains
     const xpGained = quest.experienceReward
     const statGained = rules.STAT_RULES.STAT_POINTS_PER_QUEST
 
@@ -37,9 +40,11 @@ const completeQuest = async (userId, questId) => {
     const newLevel = rules.XP_RULES.getLevelFromXP(user.totalXP)
     const levelUp = newLevel > oldLevel
 
+    // Mark quest as completed
     quest.isCompleted = true
     quest.completedAt = new Date()
 
+    // Save both documents
     await Promise.all([user.save(), quest.save()])
 
     return {

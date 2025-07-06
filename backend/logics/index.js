@@ -15,7 +15,6 @@ import updateUserUsername from './updateUserUsername.js'
 const logic = {
     loginUser,
     registerUser,
-    createQuest,
     getUserProfile,
     getAllQuests,
     completeQuest,
@@ -25,7 +24,8 @@ const logic = {
     updateUserEmail,
     updateUserPassword,
     updateUserTheme,
-    updateUserUsername
+    updateUserUsername,
+    createQuest,
 }
 
 export default logic

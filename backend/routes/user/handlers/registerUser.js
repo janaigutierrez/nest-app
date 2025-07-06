@@ -10,7 +10,10 @@ const registerUser = async (req, res, next) => {
         validator.password(password)
 
         const result = await logic.registerUser(username, email, password)
-        res.status(201).json(result)
+        res.status(201).json({
+            success: true,
+            data: { user: userResponse, token }
+        })
     } catch (error) {
         next(error)
     }

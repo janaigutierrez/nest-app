@@ -10,7 +10,10 @@ const loginUser = async (req, res, next) => {
 
         const result = await logic.loginUser(email, password)
 
-        res.status(200).json(result)
+        res.status(200).json({
+            success: true,
+            data: { user: userResponse, token }
+        })
     } catch (error) {
         next(error)
     }

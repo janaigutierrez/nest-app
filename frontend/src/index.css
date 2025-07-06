@@ -5,4 +5,163 @@
 body {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   line-height: 1.6;
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+}
+
+#root {
+  background: transparent !important;
+  min-height: 100vh;
+}
+
+.fixed.inset-0.bg-black {
+  backdrop-filter: none !important;
+  z-index: 9999 !important;
+}
+
+.fixed.z-50 {
+  backdrop-filter: none !important;
+  z-index: 9999 !important;
+}
+
+html[data-theme="library"] {
+  background-image: url('/themes/library-desktop.webp') !important;
+  background-size: cover !important;
+  background-position: center !important;
+  background-attachment: scroll !important;
+  min-height: 100vh !important;
+}
+
+html[data-theme="mystic"] {
+  background-image: url('/themes/mystic-desktop.webp') !important;
+  background-size: cover !important;
+  background-position: center !important;
+  background-attachment: scroll !important;
+  min-height: 100vh !important;
+}
+
+html[data-theme="medieval"] {
+  background-image: url('/themes/medieval-desktop.webp') !important;
+  background-size: cover !important;
+  background-position: center !important;
+  background-attachment: scroll !important;
+  min-height: 100vh !important;
+}
+
+html[data-theme="warrior"] {
+  background-image: url('/themes/warrior-desktop.webp') !important;
+  background-size: cover !important;
+  background-position: center !important;
+  background-attachment: scroll !important;
+  min-height: 100vh !important;
+}
+
+html[data-theme="academy"] {
+  background: linear-gradient(135deg, rgb(239 246 255) 0%, rgb(219 234 254) 100%) !important;
+  min-height: 100vh !important;
+}
+
+/* Library Theme - Warm browns and ambers */
+[data-theme="library"] .bg-white {
+  background-color: rgba(254, 243, 199, 0.95) !important;
+}
+
+[data-theme="library"] .bg-gray-50 {
+  background-color: rgba(253, 230, 138, 0.9) !important;
+}
+
+[data-theme="library"] .text-gray-900 {
+  color: rgb(120 53 15) !important;
+}
+
+[data-theme="library"] .text-purple-600 {
+  color: rgb(217 119 6) !important;
+}
+
+/* Mystic Theme - Purple and indigo */
+[data-theme="mystic"] .bg-white {
+  background-color: rgba(224, 231, 255, 0.95) !important;
+}
+
+[data-theme="mystic"] .bg-gray-50 {
+  background-color: rgba(196, 181, 253, 0.9) !important;
+}
+
+[data-theme="mystic"] .text-gray-900 {
+  color: rgb(55 48 163) !important;
+}
+
+[data-theme="mystic"] .text-purple-600 {
+  color: rgb(124 58 237) !important;
+}
+
+/* Medieval Theme - Stone grays */
+[data-theme="medieval"] .bg-white {
+  background-color: rgba(245, 245, 244, 0.95) !important;
+}
+
+[data-theme="medieval"] .bg-gray-50 {
+  background-color: rgba(231, 229, 228, 0.9) !important;
+}
+
+[data-theme="medieval"] .text-gray-900 {
+  color: rgb(68 64 60) !important;
+}
+
+[data-theme="medieval"] .text-purple-600 {
+  color: rgb(120 113 108) !important;
+}
+
+/* Warrior Theme - Bold reds */
+[data-theme="warrior"] .bg-white {
+  background-color: rgba(254, 226, 226, 0.85) !important;
+}
+
+[data-theme="warrior"] .bg-gray-50 {
+  background-color: rgba(252, 165, 165, 0.9) !important;
+}
+
+[data-theme="warrior"] .text-gray-900 {
+  color: rgb(153 27 27) !important;
+}
+
+[data-theme="warrior"] .text-purple-600 {
+  color: rgb(220 38 38) !important;
+}
+
+/* Academy Theme - Academic blues */
+[data-theme="academy"] .bg-white {
+  background-color: rgba(219, 234, 254, 0.95) !important;
+}
+
+[data-theme="academy"] .bg-gray-50 {
+  background-color: rgba(191, 219, 254, 0.9) !important;
+}
+
+[data-theme="academy"] .text-gray-900 {
+  color: rgb(30 64 175) !important;
+}
+
+[data-theme="academy"] .text-purple-600 {
+  color: rgb(37 99 235) !important;
+}
+
+/* Mobile Background Images */
+@media (max-width: 768px) {
+  html[data-theme="library"] {
+    background-image: url('/themes/library-mobile.webp') !important;
+  }
+
+  html[data-theme="mystic"] {
+    background-image: url('/themes/mystic-mobile.webp') !important;
+  }
+
+  html[data-theme="medieval"] {
+    background-image: url('/themes/medieval-mobile.webp') !important;
+  }
+
+  html[data-theme="warrior"] {
+    background-image: url('/themes/warrior-mobile.webp') !important;
+  }
 }

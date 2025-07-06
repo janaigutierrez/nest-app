@@ -2,7 +2,6 @@ import logic from '../../../logics/index.js'
 
 const logoutUser = async (req, res, next) => {
     try {
-        // Extraer token del header Authorization
         const authHeader = req.headers.authorization
         if (!authHeader || !authHeader.startsWith('Bearer ')) {
             return res.status(401).json({

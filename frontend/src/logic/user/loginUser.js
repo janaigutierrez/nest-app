@@ -18,8 +18,8 @@ const login = ({ email, password }) => {
         .then((response) => {
             if (response.status === 200) {
                 return response.json().then(data => {
-                    localStorage.setItem('authToken', data.token)
-                    return data
+                    localStorage.setItem('authToken', data.data.token)
+                    return data.data
                 })
             } else {
                 return response.json().then(body => {

@@ -9,7 +9,10 @@ const email = (value, name = 'email') => {
 const password = (value, name = 'password') => {
     if (typeof value !== 'string') throw new Error(`${name} is not a string`)
     if (!value.trim().length) throw new Error(`${name} is empty`)
-    if (value.length < 6) throw new Error(`${name} must be at least 6 characters`)
+    if (value.length < 8) throw new Error(`${name} must be at least 8 characters`)
+    if (!/(?=.*[a-z])/.test(value)) throw new Error(`${name} must contain lowercase letters`)
+    if (!/(?=.*[A-Z])/.test(value)) throw new Error(`${name} must contain uppercase letters`)
+    if (!/(?=.*\d)/.test(value)) throw new Error(`${name} must contain numbers`)
 }
 
 const username = (value, name = 'username') => {

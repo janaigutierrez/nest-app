@@ -9,6 +9,7 @@ const getUserProfile = () => {
 
     const payload = JSON.parse(atob(token.split('.')[1]))
     const userId = payload.userId
+
     return fetch(`${import.meta.env.VITE_API_URL}/api/users/profile/${userId}`, {
         method: 'GET',
         headers: {
@@ -19,7 +20,9 @@ const getUserProfile = () => {
         .catch(error => { throw new errors.ConnectionError(error.message) })
         .then((response) => {
             if (response.status === 200) {
-                return response.json()
+                return response.json().then(data => {
+                    return data.data.profile
+                })
             } else {
                 return response.json().then(body => {
                     throw new errors[body.name](body.message)

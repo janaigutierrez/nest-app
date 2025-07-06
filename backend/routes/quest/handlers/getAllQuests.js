@@ -5,9 +5,14 @@ const getAllQuests = async (req, res, next) => {
     try {
         const userId = req.user.id
 
-        const quests = await logic.getAllQuests(userId)
+        validator.id(userId)
 
-        res.status(200).json({ quests })
+        const questsList = await logic.getAllQuests(userId)
+
+        res.status(200).json({
+            success: true,
+            data: { quests: questsList }
+        })
     } catch (error) {
         next(error)
     }

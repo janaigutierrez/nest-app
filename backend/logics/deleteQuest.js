@@ -19,7 +19,6 @@ const deleteQuest = async (userId, questId) => {
         throw new errors.ValidationError('cannot delete completed quest')
     }
 
-    // Delete the quest
     await Quest.findByIdAndDelete(questId)
 
     return quest

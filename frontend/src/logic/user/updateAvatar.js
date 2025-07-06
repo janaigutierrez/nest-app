@@ -27,7 +27,7 @@ const updateAvatar = (equippedSet) => {
         .catch(error => { throw new errors.ConnectionError(error.message) })
         .then((response) => {
             if (response.status === 200) {
-                return response.json()
+                return response.json().then(data => data)
             } else {
                 return response.json().then(body => {
                     throw new errors[body.name](body.message)
