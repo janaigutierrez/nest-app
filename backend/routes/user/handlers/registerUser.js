@@ -12,7 +12,7 @@ const registerUser = async (req, res, next) => {
         const result = await logic.registerUser(username, email, password)
         res.status(201).json({
             success: true,
-            data: { user: userResponse, token }
+            data: { user: result, token }
         })
     } catch (error) {
         next(error)

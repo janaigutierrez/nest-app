@@ -12,7 +12,10 @@ const loginUser = async (req, res, next) => {
 
         res.status(200).json({
             success: true,
-            data: { user: userResponse, token }
+            data: {
+                user: result.user,
+                token: result.token
+            }
         })
     } catch (error) {
         next(error)
