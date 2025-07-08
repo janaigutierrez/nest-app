@@ -138,8 +138,8 @@ NEST App is a full-stack gamified agenda application that transforms daily tasks
 ```
 ### Test Coverage
 
-Captura de pantalla (más del 80% en todo)
+![Test Coverage](./coverage-screenshot.jpg)
 
 ### Project
 
-app link here
+[Nest App](http://nest-app.surge.sh)
