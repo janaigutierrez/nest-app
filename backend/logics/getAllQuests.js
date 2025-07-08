@@ -7,7 +7,6 @@ const getAllQuests = async (userId) => {
             .sort({ createdAt: -1 })
 
         return quests.map(quest => ({
-            _id: quest._id.toString(),
             id: quest._id.toString(),
             title: quest.title,
             description: quest.description,

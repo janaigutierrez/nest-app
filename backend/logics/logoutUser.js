@@ -33,7 +33,7 @@ const logoutUser = async (token, userId) => {
         }
 
     } catch (error) {
-        if (error.code === 11000) { // Duplicate key error
+        if (error.code === 11000) {
             return {
                 message: 'Logout successful',
                 tokenInvalidated: true

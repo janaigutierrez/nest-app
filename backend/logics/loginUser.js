@@ -17,12 +17,15 @@ const loginUser = async (email, password) => {
     const token = auth.generateToken(user._id)
 
     const userResponse = {
-        id: user._id,
+        id: user._id.toString(),
         username: user.username,
         email: user.email,
         totalXP: user.totalXP,
         currentLevel: user.currentLevel,
-        stats: user.stats
+        stats: user.stats,
+        theme: user.theme,
+        avatar: user.avatar,
+        xpToNextLevel: user.xpToNextLevel
     }
 
     return { user: userResponse, token }

@@ -23,12 +23,15 @@ const registerUser = async (username, email, password) => {
     )
 
     const userResponse = {
-        id: savedUser._id,
+        id: savedUser._id.toString(),
         username: savedUser.username,
         email: savedUser.email,
         totalXP: savedUser.totalXP,
         currentLevel: savedUser.currentLevel,
-        stats: savedUser.stats
+        stats: savedUser.stats,
+        theme: savedUser.theme,
+        avatar: savedUser.avatar,
+        xpToNextLevel: savedUser.xpToNextLevel
     }
 
     return { user: userResponse, token }

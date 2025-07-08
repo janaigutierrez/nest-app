@@ -56,7 +56,6 @@ export const createQuest = async (userId, questData) => {
             aiMetadata: null
         }
     }
-
     const quest = new Quest({
         ...questInfo,
         userId,
@@ -67,7 +66,24 @@ export const createQuest = async (userId, questData) => {
 
     try {
         const savedQuest = await quest.save()
-        return savedQuest
+        return {
+            id: savedQuest._id.toString(),
+            title: savedQuest.title,
+            description: savedQuest.description,
+            difficulty: savedQuest.difficulty,
+            experienceReward: savedQuest.experienceReward,
+            targetStat: savedQuest.targetStat,
+            generatedBy: savedQuest.generatedBy,
+            tags: savedQuest.tags,
+            epicElements: savedQuest.epicElements,
+            aiMetadata: savedQuest.aiMetadata,
+            userId: savedQuest.userId,
+            isCompleted: savedQuest.isCompleted,
+            completedAt: savedQuest.completedAt,
+            isDaily: savedQuest.isDaily,
+            createdAt: savedQuest.createdAt,
+            updatedAt: savedQuest.updatedAt
+        }
     } catch (error) {
         console.error('Error saving quest to MongoDB:', error)
         throw new errors.ValidationError('Failed to save quest to database')

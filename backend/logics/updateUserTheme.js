@@ -24,8 +24,20 @@ const updateUserTheme = async (userId, theme) => {
     return {
         message: 'Theme updated successfully',
         theme: user.preferences.theme,
-        user: user.toJSON()
+        user: {
+            id: user._id.toString(),
+            username: user.username,
+            email: user.email,
+            totalXP: user.totalXP,
+            currentLevel: user.currentLevel,
+            stats: user.stats,
+            theme: user.theme,
+            avatar: user.avatar,
+            xpToNextLevel: user.xpToNextLevel,
+            preferences: user.preferences,
+            createdAt: user.createdAt,
+            updatedAt: user.updatedAt
+        }
     }
 }
-
 export default updateUserTheme

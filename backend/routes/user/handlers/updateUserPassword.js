@@ -3,7 +3,7 @@ import logic from "../../../logics/index.js"
 
 const updateUserPassword = async (req, res, next) => {
     try {
-        const userId = req.user._id.toString()
+        const userId = req.user.id
         const { currentPassword, newPassword } = req.body
 
         validator.password(currentPassword, 'current password')

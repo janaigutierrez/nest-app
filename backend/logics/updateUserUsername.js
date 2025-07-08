@@ -25,7 +25,20 @@ const updateUserUsername = async (userId, newUsername) => {
     return {
         message: 'Username updated successfully',
         username: user.username,
-        user: user.toJSON()
+        user: {
+            id: user._id.toString(),
+            username: user.username,
+            email: user.email,
+            totalXP: user.totalXP,
+            currentLevel: user.currentLevel,
+            stats: user.stats,
+            theme: user.theme,
+            avatar: user.avatar,
+            xpToNextLevel: user.xpToNextLevel,
+            preferences: user.preferences,
+            createdAt: user.createdAt,
+            updatedAt: user.updatedAt
+        }
     }
 }
 

@@ -2,7 +2,7 @@ import logic from "../../../logics/index.js"
 
 const updateUserTheme = async (req, res, next) => {
     try {
-        const userId = req.user.id.toString()
+        const userId = req.user.id
         const { theme } = req.body
 
         const validThemes = ['default', 'dark', 'library', 'mystic', 'medieval', 'warrior', 'academy']

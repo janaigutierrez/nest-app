@@ -5,7 +5,6 @@ const deleteQuest = async (userId, questId) => {
     validator.id(userId, 'user ID')
     validator.id(questId, 'quest ID')
 
-    // Find quest and verify ownership
     const quest = await Quest.findById(questId)
     if (!quest) {
         throw new errors.ExistenceError('quest not found')
@@ -21,7 +20,24 @@ const deleteQuest = async (userId, questId) => {
 
     await Quest.findByIdAndDelete(questId)
 
-    return quest
+    return {
+        id: quest._id.toString(),
+        title: quest.title,
+        description: quest.description,
+        difficulty: quest.difficulty,
+        experienceReward: quest.experienceReward,
+        targetStat: quest.targetStat,
+        generatedBy: quest.generatedBy,
+        tags: quest.tags,
+        epicElements: quest.epicElements,
+        aiMetadata: quest.aiMetadata,
+        userId: quest.userId,
+        isCompleted: quest.isCompleted,
+        completedAt: quest.completedAt,
+        isDaily: quest.isDaily,
+        createdAt: quest.createdAt,
+        updatedAt: quest.updatedAt
+    }
 }
 
 export default deleteQuest
