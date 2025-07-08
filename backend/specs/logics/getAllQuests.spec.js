@@ -56,7 +56,7 @@ describe('getAllQuests', () => {
                 expect(quests).to.be.an('array')
                 expect(quests).to.have.length(1)
                 expect(quests[0].title).to.equal('Test Quest')
-                expect(quests[0]._id).to.be.a('string')
+                expect(quests[0].id).to.be.a('string')
             })
     })
 

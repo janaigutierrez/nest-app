@@ -119,13 +119,13 @@ const QuestList = () => {
                     </button>
                     <button
                         onClick={() => setFilter('active')}
-                        className={`px-4 py-2 rounded-lg transition-colors ${filter === 'active' ? 'bg-green-600 text-white' : 'bg-gray-200 text-gray-700 dark:text-gray-300'}`}
+                        className={`px-4 py-2 rounded-lg transition-colors ${filter === 'active' ? 'bg-green-600 text-white' : 'bg-gray-200 text-gray-700 dark:bg-gray-700 dark:text-gray-300'}`}
                     >
                         Active ({getActiveQuests().length})
                     </button>
                     <button
                         onClick={() => setFilter('completed')}
-                        className={`px-4 py-2 rounded-lg transition-colors ${filter === 'completed' ? 'bg-blue-600 text-white' : 'bg-gray-200 text-gray-700 dark:text-gray-300'}`}
+                        className={`px-4 py-2 rounded-lg transition-colors ${filter === 'completed' ? 'bg-blue-600 text-white' : 'bg-gray-200 text-gray-700 dark:bg-gray-700 dark:text-gray-300'}`}
                     >
                         Completed ({getCompletedQuests().length})
                     </button>

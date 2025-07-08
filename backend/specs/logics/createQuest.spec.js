@@ -55,7 +55,7 @@ describe('createQuest', () => {
                 expect(result.generatedBy).to.equal('user')
                 expect(result.targetStat).to.equal('STRENGTH')
                 expect(result.experienceReward).to.be.a('number')
-                expect(result._id).to.exist
+                expect(result.id).to.exist
             })
     })
 
@@ -73,7 +73,7 @@ describe('createQuest', () => {
                 expect(result).to.be.an('object')
                 expect(['ai', 'epic_fallback', 'user']).to.include(result.generatedBy)
                 expect(result.title).to.be.a('string')
-                expect(result._id).to.exist
+                expect(result.id).to.exist
             })
     })
 

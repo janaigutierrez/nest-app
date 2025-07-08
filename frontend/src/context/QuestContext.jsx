@@ -87,15 +87,15 @@ export const QuestProvider = ({ children }) => {
     const addQuest = async (questData) => {
         try {
             setError(null)
-            const response = await logics.quest.createQuest(questData)
-            const createdQuest = response.quest
+            const createdQuest = await logics.quest.createQuest(questData)
+
 
             setQuests(prev => {
                 const prevArray = Array.isArray(prev) ? prev : []
                 return [createdQuest, ...prevArray]
             })
-
             setIsQuestModalOpen(false)
+            showSuccess('🎉 Quest created successfully!')
             return createdQuest
         } catch (error) {
             setError(error.message)
