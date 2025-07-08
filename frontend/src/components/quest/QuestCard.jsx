@@ -22,7 +22,7 @@ const QuestCard = React.memo(({ quest, onComplete, onAbandon }) => {
                         {!quest.isCompleted ? (
                             <>
                                 <button
-                                    onClick={() => onComplete(quest._id)}
+                                    onClick={() => onComplete(quest.id)}
                                     className="bg-green-600 hover:bg-green-700 dark:bg-green-500 dark:hover:bg-green-600 text-white px-3 py-1 rounded text-sm transition-colors"
                                     title="Complete Quest"
                                 >

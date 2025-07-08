@@ -55,7 +55,7 @@ export const QuestProvider = ({ children }) => {
         try {
             const response = await logics.quest.getAllQuests()
             const questsArray = response || []
-            const validQuests = questsArray.filter(quest => quest && quest._id)
+            const validQuests = questsArray.filter(quest => quest && quest.id)
             setQuests(validQuests)
         } catch (error) {
             setQuests([])
@@ -112,8 +112,8 @@ export const QuestProvider = ({ children }) => {
             setQuests(prev => {
                 if (!Array.isArray(prev)) return []
                 return prev.map(q => {
-                    if (!q || !q._id) return q
-                    return q._id === questId ? result.updatedQuest : q
+                    if (!q || !q.id) return q
+                    return q.id === questId ? result.updatedQuest : q
                 }).filter(Boolean)
             })
 
@@ -142,7 +142,7 @@ export const QuestProvider = ({ children }) => {
 
             setQuests(prev => {
                 if (!Array.isArray(prev)) return []
-                return prev.filter(quest => quest && quest._id !== questId)
+                return prev.filter(quest => quest && quest.id !== questId)
             })
 
         } catch (error) {

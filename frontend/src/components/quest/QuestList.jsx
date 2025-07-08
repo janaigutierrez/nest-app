@@ -61,7 +61,7 @@ const QuestList = () => {
     const handleAbandon = async () => {
         if (!questToAbandon) return
         try {
-            await abandonQuest(questToAbandon._id)
+            await abandonQuest(questToAbandon.id)
             setQuestToAbandon(null)
         } catch (error) {
             console.error('Error abandoning quest:', error)
@@ -161,7 +161,7 @@ const QuestList = () => {
                 ) : (
                     sortedQuests.map((quest) => (
                         <QuestCard
-                            key={quest._id}
+                            key={quest.id}
                             quest={quest}
                             onComplete={handleComplete}
                             onAbandon={showAbandonConfirm}
