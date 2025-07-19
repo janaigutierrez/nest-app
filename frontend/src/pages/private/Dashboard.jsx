@@ -8,6 +8,7 @@ import { useQuests } from '../../context/QuestContext'
 import { useUserProgression } from '../../hooks/useUserProgression'
 import QuestModal from '../../components/quest/QuestModal'
 import RitualBuilder from '../../components/templates/ritual-wizard/RitualBuilder'
+import logics from '../../logic'
 import { useState } from 'react'
 
 function Dashboard() {
@@ -30,10 +31,18 @@ function Dashboard() {
   }
 
   const handleSaveRitual = async (ritualData) => {
-    console.log('🎯 Ritual created:', ritualData)
-    // TODO: Backend integration
-    alert(`✅ Ritual "${ritualData.title}" created!`)
-    setIsRitualBuilderOpen(false)
+    try {
+      console.log('🎯 Ritual created:', ritualData)
+
+      // Usar la nueva función createRitual
+      await logics.quest.createRitual(ritualData)
+
+      alert(`✅ Ritual "${ritualData.title}" created!`)
+      setIsRitualBuilderOpen(false)
+    } catch (error) {
+      console.error('Error creating ritual:', error)
+      alert(`❌ Error creating ritual: ${error.message}`)
+    }
   }
 
   // Quest handlers with mode selection
