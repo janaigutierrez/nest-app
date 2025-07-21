@@ -1,58 +1,31 @@
 import { Link, useLocation } from 'react-router-dom'
 import { useAuth } from '../../context/AuthContext'
 import { useTheme } from '../../context/ThemeContext'
-import { getStaticAvatarSprite } from '../../assets/avatars'
 import { rules } from 'common'
-import { useState, useEffect } from 'react'
 
-function Header() {
-    const { user, loading } = useAuth()
-    const { theme } = useTheme()
+const Header = () => {
+    const { user, logout } = useAuth()
+    const { theme, toggleDarkMode, setTheme } = useTheme()
     const location = useLocation()
-    const [isDarkMode, setIsDarkMode] = useState(false)
 
-    const isDarkButtonDisabled = theme !== 'default'
-
-    useEffect(() => {
-        const savedDarkMode = localStorage.getItem('darkMode')
-        if (savedDarkMode) {
-            const isDark = JSON.parse(savedDarkMode)
-            setIsDarkMode(isDark)
-            if (isDark) {
-                document.documentElement.classList.add('dark')
-            }
-        }
-    }, [])
-
-    const toggleDarkMode = () => {
-        const newDarkMode = !isDarkMode
-        setIsDarkMode(newDarkMode)
-
-        if (newDarkMode) {
-            document.documentElement.classList.add('dark')
-        } else {
-            document.documentElement.classList.remove('dark')
-        }
-
-        localStorage.setItem('darkMode', JSON.stringify(newDarkMode))
+    const getStaticAvatarSprite = (user) => {
+        const spriteId = user?.avatarId || 80
+        return `/character/sprite_${spriteId}.png`
     }
 
-    if (loading || !user) {
+    if (!user) {
         return (
-            <header className="bg-white dark:bg-gray-800 shadow-sm border-b border-gray-200 dark:border-gray-700">
+            <header className="bg-white dark:bg-gray-800 shadow-sm border-b border-gray-200 dark:border-gray-700 transition-colors">
                 <div className="container mx-auto px-4 py-4">
                     <div className="flex items-center justify-between">
-                        <div className="text-2xl font-bold text-purple-600 dark:text-purple-400">
-                            <div className="flex items-center">
-                                <img
-                                    src="/icon.png"
-                                    alt="Nest Logo"
-                                    className="w-8 h-8 mr-3"
-                                />
-                                <span>Nest</span>
-                            </div>
+                        <div className="flex items-center">
+                            <img
+                                src="/icon.png"
+                                alt="Nest Logo"
+                                className="w-8 h-8 mr-3"
+                            />
+                            <span className="text-2xl font-bold text-purple-600 dark:text-purple-400">Nest</span>
                         </div>
-                        <div className="animate-pulse text-gray-600 dark:text-gray-300">Loading...</div>
                     </div>
                 </div>
             </header>
@@ -76,6 +49,7 @@ function Header() {
                         <span className="text-2xl font-bold text-purple-600 dark:text-purple-400">Nest</span>
                     </div>
 
+                    {/* Desktop Navigation */}
                     <nav className="hidden md:flex items-center space-x-6">
                         <Link
                             to="/"
@@ -94,6 +68,15 @@ function Header() {
                                 }`}
                         >
                             📜 My Quests
+                        </Link>
+                        <Link
+                            to="/agenda"
+                            className={`font-medium transition-colors ${isActive('/agenda')
+                                ? 'text-purple-600 dark:text-purple-400 border-b-2 border-purple-600 dark:border-purple-400 pb-1'
+                                : 'text-gray-600 dark:text-gray-300 hover:text-purple-600 dark:hover:text-purple-400'
+                                }`}
+                        >
+                            📅 Agenda
                         </Link>
                         <Link
                             to="/stats"
@@ -115,14 +98,16 @@ function Header() {
                         </Link>
                     </nav>
 
-                    <div className="flex items-center gap-3">
-                        {isDarkModeUnlocked && !isDarkButtonDisabled ? (
+                    {/* Right Side Actions */}
+                    <div className="flex items-center space-x-4">
+                        {/* Theme Toggle */}
+                        {isDarkModeUnlocked ? (
                             <button
                                 onClick={toggleDarkMode}
                                 className="p-2 rounded-lg bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors"
-                                title={isDarkMode ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
+                                title="Toggle Dark Mode"
                             >
-                                {isDarkMode ? (
+                                {theme === 'dark' ? (
                                     <span className="text-yellow-500 text-lg">☀️</span>
                                 ) : (
                                     <span className="text-gray-600 text-lg">🌙</span>
@@ -131,18 +116,19 @@ function Header() {
                         ) : (
                             <div
                                 className="p-2 rounded-lg bg-gray-100 dark:bg-gray-700 opacity-50 cursor-not-allowed"
-                                title={isDarkButtonDisabled ?
-                                    `Dark mode disabled while using ${theme} theme` :
-                                    `Dark Mode unlocks at Level 2 (Current: Level ${user.currentLevel || 1})`}
+                                title={`Dark Mode unlocks at Level 2 (Current: Level ${user.currentLevel || 1})`}
                             >
                                 <span className="text-gray-400 text-lg">🔒</span>
                             </div>
                         )}
 
+                        {/* User Info */}
                         <div className="text-right hidden sm:block">
                             <div className="text-sm font-medium text-gray-900 dark:text-gray-100">{user.username}</div>
                             <div className="text-xs text-gray-500 dark:text-gray-400">Level {user.currentLevel || 1} • {user.totalXP || 0} XP</div>
                         </div>
+
+                        {/* Avatar */}
                         <div className="w-10 h-10">
                             <img
                                 src={getStaticAvatarSprite(user)}
@@ -176,6 +162,15 @@ function Header() {
                             }`}
                     >
                         📜
+                    </Link>
+                    <Link
+                        to="/agenda"
+                        className={`px-3 py-2 rounded-lg text-sm font-medium transition-colors ${isActive('/agenda')
+                            ? 'bg-purple-100 dark:bg-purple-900 text-purple-600 dark:text-purple-400'
+                            : 'text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'
+                            }`}
+                    >
+                        📅
                     </Link>
                     <Link
                         to="/stats"

@@ -5,6 +5,7 @@ import { protect } from "../../middleware/auth.js";
 const router = express.Router()
 
 router.get('/', protect, handlers.getAllQuests)
+router.get('/by-date', protect, handlers.getQuestsByDate)
 
 router.post('/create', protect, handlers.createQuest)
 
