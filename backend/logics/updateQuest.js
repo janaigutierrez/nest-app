@@ -15,9 +15,9 @@ const updateQuest = async (userId, questId, updateData) => {
         isScheduled
     } = updateData
 
-    // Validate optional fields if provided
-    if (title !== undefined) validator.text(title, 'title', 3, 120)
-    if (description !== undefined) validator.text(description, 'description', 0, 500)
+    // Validate optional fields if provided - FIXED PARAMETER ORDER
+    if (title !== undefined) validator.text(title, 120, 3, 'title')
+    if (description !== undefined) validator.text(description, 500, 0, 'description')
     if (difficulty !== undefined && !['QUICK', 'STANDARD', 'LONG', 'EPIC'].includes(difficulty)) {
         throw new errors.ValidationError('Invalid difficulty')
     }
@@ -31,21 +31,36 @@ const updateQuest = async (userId, questId, updateData) => {
     try {
         // Check if quest exists and belongs to user
         const existingQuest = await Quest.findOne({ _id: questId, userId })
-        
+
         if (!existingQuest) {
             throw new errors.NotFoundError('Quest not found')
+        }
+
+        // POLICY: No updating completed quests
+        if (existingQuest.isCompleted) {
+            throw new errors.ValidationError('Cannot update completed quest')
         }
 
         // Build update object with only provided fields
         const updateFields = {}
         if (title !== undefined) updateFields.title = title.trim()
-        if (description !== undefined) updateFields.description = description
+        if (description !== undefined) updateFields.description = description.trim()
         if (difficulty !== undefined) updateFields.difficulty = difficulty
-        if (scheduledTime !== undefined) updateFields.scheduledTime = scheduledTime
-        if (scheduledDate !== undefined) updateFields.scheduledDate = new Date(scheduledDate)
+        if (scheduledTime !== undefined) {
+            // Normalize time format (9:30 -> 09:30)
+            const [hours, minutes] = scheduledTime.split(':')
+            updateFields.scheduledTime = `${hours.padStart(2, '0')}:${minutes}`
+        }
+        if (scheduledDate !== undefined) {
+            const date = new Date(scheduledDate)
+            if (isNaN(date.getTime())) {
+                throw new errors.ValidationError('Invalid date format')
+            }
+            updateFields.scheduledDate = date
+        }
         if (duration !== undefined) updateFields.duration = duration
         if (isScheduled !== undefined) updateFields.isScheduled = Boolean(isScheduled)
-        
+
         updateFields.updatedAt = new Date()
 
         console.log('🔧 Updating quest:', {
@@ -97,9 +112,20 @@ const updateQuest = async (userId, questId, updateData) => {
 
     } catch (error) {
         console.error('❌ Error updating quest:', error)
+
+        // DON'T MASK VALIDATION ERRORS - Let them bubble up with original message
+        if (error instanceof errors.ValidationError ||
+            error instanceof errors.NotFoundError ||
+            error.message.includes('must be at least') ||
+            error.message.includes('must be at most')) {
+            throw error
+        }
+
+        // Only mask unexpected MongoDB errors
         if (error.name === 'ValidationError') {
             throw new errors.ValidationError('Invalid quest data provided')
         }
+
         throw error
     }
 }
