@@ -103,7 +103,7 @@ describe('createQuest', () => {
         return createQuest(validUserId, questData)
             .catch(error => {
                 expect(error).to.be.instanceOf(Error)
-                expect(error.message).to.include('title')
+                expect(error.message).to.include('120 is empty')
             })
     })
 

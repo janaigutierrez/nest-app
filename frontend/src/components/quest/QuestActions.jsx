@@ -9,7 +9,7 @@ const QuestActions = ({ quest }) => {
 
     const handleComplete = async () => {
         try {
-            await completeQuest(quest._id)
+            await completeQuest(quest.id || quest._id)
             showSuccess('🎉 Quest completed! XP earned!')
         } catch (error) {
             console.error('Error completing quest:', error)
@@ -19,7 +19,7 @@ const QuestActions = ({ quest }) => {
 
     const handleAbandon = async () => {
         try {
-            await abandonQuest(quest._id)
+            await abandonQuest(quest.id || quest._id)
             showSuccess('Quest abandoned')
             setShowAbandonModal(false)
         } catch (error) {

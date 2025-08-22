@@ -87,6 +87,7 @@ export const QuestProvider = ({ children }) => {
     const addQuest = async (questData) => {
         try {
             setError(null)
+            console.log('🔧 QuestContext received:', questData)
             const createdQuest = await logics.quest.createQuest(questData)
 
 
