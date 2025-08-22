@@ -9,6 +9,7 @@ router.get('/by-date', protect, handlers.getQuestsByDate)
 
 router.post('/create', protect, handlers.createQuest)
 
+router.put('/:questId', protect, handlers.updateQuest)
 router.put('/:id/complete', protect, handlers.completeQuest)
 
 router.delete('/:id', protect, handlers.deleteQuest)

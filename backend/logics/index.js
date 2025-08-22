@@ -3,6 +3,7 @@ import createQuest from './createQuest.js'
 import deleteQuest from './deleteQuest.js'
 import getAllQuests from './getAllQuests.js'
 import getQuestsByDate from './getQuestsByDate.js'
+import updateQuest from './updateQuest.js'
 import getUserProfile from './getUserProfile.js'
 import loginUser from './loginUser.js'
 import logoutUser from './logoutUser.js'
@@ -20,6 +21,7 @@ const logic = {
     getAllQuests,
     completeQuest,
     deleteQuest,
+    updateQuest,
     updateUserAvatar,
     logoutUser,
     updateUserEmail,

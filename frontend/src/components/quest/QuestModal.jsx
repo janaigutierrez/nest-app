@@ -61,6 +61,21 @@ function QuestModal() {
                     setLocalError('Please select a time for your scheduled quest')
                     return
                 }
+                
+                // Validate scheduling edge cases
+                const [startHour, startMinute] = scheduledTime.split(':').map(Number)
+                const startMinutesTotal = startHour * 60 + startMinute
+                const endMinutesTotal = startMinutesTotal + duration
+                
+                if (endMinutesTotal > 24 * 60 + 120) { // Allow max 2 hours past midnight
+                    setLocalError('Quest is too long for this time slot. Consider splitting into multiple days.')
+                    return
+                }
+                
+                if (duration > 480) { // 8 hours max
+                    setLocalError('Quest duration cannot exceed 8 hours')
+                    return
+                }
             }
 
             const questData = {
@@ -134,6 +149,16 @@ function QuestModal() {
                 }
                 if (duration < 5 || duration > 480) {
                     setLocalError('Duration must be between 5 and 480 minutes')
+                    return
+                }
+                
+                // Validate scheduling edge cases for manual quests too
+                const [startHour, startMinute] = scheduledTime.split(':').map(Number)
+                const startMinutesTotal = startHour * 60 + startMinute
+                const endMinutesTotal = startMinutesTotal + duration
+                
+                if (endMinutesTotal > 24 * 60 + 120) { // Allow max 2 hours past midnight
+                    setLocalError('Quest is too long for this time slot. Consider splitting into multiple days.')
                     return
                 }
             }

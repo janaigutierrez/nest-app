@@ -26,6 +26,15 @@ const getQuestsByDate = async (userId, dateStr) => {
         const endOfDay = new Date(targetDate)
         endOfDay.setHours(23, 59, 59, 999)
 
+        const query = {
+            userId,
+            isScheduled: true,
+            scheduledDate: {
+                $gte: startOfDay,
+                $lte: endOfDay
+            }
+        }
+
         const quests = await Quest.find(query).sort({ scheduledTime: 1 })
 
         console.log('🔧 Quests found for date:', quests.length)

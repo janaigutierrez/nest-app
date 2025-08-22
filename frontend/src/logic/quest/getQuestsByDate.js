@@ -14,12 +14,18 @@ const getQuestsByDate = (date) => {
 
     let dateStr
     if (date instanceof Date) {
+        // Use local date to avoid timezone issues
         const year = date.getFullYear()
         const month = (date.getMonth() + 1).toString().padStart(2, '0')
         const day = date.getDate().toString().padStart(2, '0')
         dateStr = `${year}-${month}-${day}`
     } else {
         dateStr = date
+    }
+    
+    // Validate date format
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(dateStr)) {
+        throw new errors.ValidationError('Invalid date format. Expected YYYY-MM-DD')
     }
 
     console.log('🔧 Formatted date for API:', dateStr)
