@@ -15,7 +15,7 @@ const ConflictResolutionModal = ({
 
     if (!isOpen || !conflictData) return null
 
-    const { hasConflicts, conflicts, suggestions, worstOverlap } = conflictData
+    const { conflicts, suggestions, worstOverlap } = conflictData
 
     const handleResolve = () => {
         if (selectedResolution === 'proceed') {
@@ -94,10 +94,10 @@ const ConflictResolutionModal = ({
                             <div
                                 key={index}
                                 className={`border rounded-lg p-3 ${getConflictSeverity(conflict.overlapMinutes) === 'severe'
-                                        ? 'border-red-200 bg-red-50'
-                                        : getConflictSeverity(conflict.overlapMinutes) === 'moderate'
-                                            ? 'border-orange-200 bg-orange-50'
-                                            : 'border-yellow-200 bg-yellow-50'
+                                    ? 'border-red-200 bg-red-50'
+                                    : getConflictSeverity(conflict.overlapMinutes) === 'moderate'
+                                        ? 'border-orange-200 bg-orange-50'
+                                        : 'border-yellow-200 bg-yellow-50'
                                     }`}
                             >
                                 <div className="flex items-center justify-between">
@@ -113,10 +113,10 @@ const ConflictResolutionModal = ({
                                     </div>
                                     <div className="text-right">
                                         <div className={`text-sm font-medium ${getConflictSeverity(conflict.overlapMinutes) === 'severe'
-                                                ? 'text-red-700'
-                                                : getConflictSeverity(conflict.overlapMinutes) === 'moderate'
-                                                    ? 'text-orange-700'
-                                                    : 'text-yellow-700'
+                                            ? 'text-red-700'
+                                            : getConflictSeverity(conflict.overlapMinutes) === 'moderate'
+                                                ? 'text-orange-700'
+                                                : 'text-yellow-700'
                                             }`}>
                                             {formatDuration(conflict.overlapMinutes)} overlap
                                         </div>

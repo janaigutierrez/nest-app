@@ -526,20 +526,20 @@ const WeeklyAgendaView = () => {
                     </div>
 
                     {/* Day Columns */}
-                    {weekDays.map((dayDate, dayIndex) => (
+                    {weekDays.map((dayDate) => (
                         <div key={dayDate.toDateString()} className="border-r border-gray-200 dark:border-gray-700 relative">
                             {/* Day Header */}
                             <div className={`h-16 border-b border-gray-200 dark:border-gray-700 flex flex-col items-center justify-center ${isToday(dayDate) ? 'bg-purple-100 dark:bg-purple-900/30' : 'bg-gray-50 dark:bg-gray-800'
                                 }`}>
                                 <span className={`text-xs font-medium ${isToday(dayDate)
-                                        ? 'text-purple-700 dark:text-purple-300'
-                                        : 'text-gray-700 dark:text-gray-300'
+                                    ? 'text-purple-700 dark:text-purple-300'
+                                    : 'text-gray-700 dark:text-gray-300'
                                     }`}>
                                     {dayDate.toLocaleDateString('en-US', { weekday: 'short' })}
                                 </span>
                                 <span className={`text-sm font-bold ${isToday(dayDate)
-                                        ? 'text-purple-900 dark:text-purple-100'
-                                        : 'text-gray-900 dark:text-white'
+                                    ? 'text-purple-900 dark:text-purple-100'
+                                    : 'text-gray-900 dark:text-white'
                                     }`}>
                                     {dayDate.getDate()}
                                 </span>
@@ -588,7 +588,7 @@ const WeeklyAgendaView = () => {
     )
 }
 
-const WeeklyTimeSlot = ({ dayDate, time, isDragOver, onDragOver, onDragLeave, onDrop }) => {
+const WeeklyTimeSlot = ({ isDragOver, onDragOver, onDragLeave, onDrop }) => {
     return (
         <div
             className={`h-20 border-b border-gray-200 dark:border-gray-700 relative transition-colors duration-200 ${isDragOver ? 'bg-purple-100 dark:bg-purple-900/30' : 'hover:bg-gray-50 dark:hover:bg-gray-800/50'
@@ -641,10 +641,10 @@ const WeeklyQuestBlock = ({ quest, onClick, onDragStart, onDragEnd, getStatColor
     return (
         <div
             className={`absolute left-1 right-1 rounded shadow-sm border-l-2 text-xs transition-all duration-200 ${quest.isCompleted
-                    ? 'border-green-500 bg-green-50 dark:bg-green-900/20 opacity-75 cursor-pointer'
-                    : quest.isSplitQuest
-                        ? getSplitQuestStyling() || `border-l-2 ${getStatColor(quest.targetStat)} cursor-pointer`
-                        : `cursor-move ${getStatColor(quest.targetStat)}`
+                ? 'border-green-500 bg-green-50 dark:bg-green-900/20 opacity-75 cursor-pointer'
+                : quest.isSplitQuest
+                    ? getSplitQuestStyling() || `border-l-2 ${getStatColor(quest.targetStat)} cursor-pointer`
+                    : `cursor-move ${getStatColor(quest.targetStat)}`
                 } ${isDragging ? 'opacity-50 scale-105 z-50' : 'hover:shadow-md'
                 }`}
             style={{
@@ -667,19 +667,19 @@ const WeeklyQuestBlock = ({ quest, onClick, onDragStart, onDragEnd, getStatColor
                         <span className="text-xs">{getStatEmoji(quest.targetStat)}</span>
                     )}
                     <span className={`font-medium text-xs truncate ${quest.isCompleted
-                            ? 'line-through text-gray-500 dark:text-gray-400'
-                            : quest.splitType === 'continuation'
-                                ? 'text-orange-900 dark:text-orange-100'
-                                : 'text-gray-900 dark:text-white'
+                        ? 'line-through text-gray-500 dark:text-gray-400'
+                        : quest.splitType === 'continuation'
+                            ? 'text-orange-900 dark:text-orange-100'
+                            : 'text-gray-900 dark:text-white'
                         }`}>
                         {quest.title}
                     </span>
                 </div>
                 <div className={`text-xs ${quest.isCompleted
-                        ? 'text-gray-500 dark:text-gray-500'
-                        : quest.splitType === 'continuation'
-                            ? 'text-orange-700 dark:text-orange-300'
-                            : 'text-gray-600 dark:text-gray-300'
+                    ? 'text-gray-500 dark:text-gray-500'
+                    : quest.splitType === 'continuation'
+                        ? 'text-orange-700 dark:text-orange-300'
+                        : 'text-gray-600 dark:text-gray-300'
                     }`}>
                     {quest.duration}min
                     {quest.splitType === 'today' && quest.overflowMinutes > 0 && (

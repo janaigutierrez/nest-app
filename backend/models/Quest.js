@@ -85,8 +85,7 @@ const questSchema = new mongoose.Schema({
 
     isScheduled: {
         type: Boolean,
-        default: false,
-        //index: true
+        default: false
     },
 
     generatedBy: {

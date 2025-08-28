@@ -39,7 +39,7 @@ function Register() {
             if (formData.password !== formData.confirmPassword) {
                 throw new Error('Passwords do not match')
             }
-            const result = await logics.user.registerUser(formData)
+            await logics.user.registerUser(formData)
             await refreshUserData()
             navigate('/')
 

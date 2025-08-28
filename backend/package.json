@@ -1,5 +1,5 @@
 {
-  "name": "express",
+  "name": "nest-app-backend",
   "version": "1.0.0",
   "type": "module",
   "main": "index.js",
@@ -38,16 +38,9 @@
       "*.config.js",
       "specs/**",
       "**/*.spec.js",
-      "**/index.js",
       "config/database.js",
-      "models/quest.js",
-      "models/user.js",
-      "routes/**",
-      "middleware/errorHandler.js",
       "utils/aiService/groqClient.js",
-      "utils/aiService/questGenerator.js",
-      "models/**",
-      "middleware/auth.js"
+      "utils/aiService/questGenerator.js"
     ],
     "reporter": [
       "text",

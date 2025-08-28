@@ -1,4 +1,4 @@
-import { errors, validator } from "common"
+import { errors } from "common"
 import getLoggedUserId from "../helpers/getLoggedUserId"
 
 const getQuestsByDate = (date) => {
@@ -22,7 +22,7 @@ const getQuestsByDate = (date) => {
     } else {
         dateStr = date
     }
-    
+
     // Validate date format
     if (!/^\d{4}-\d{2}-\d{2}$/.test(dateStr)) {
         throw new errors.ValidationError('Invalid date format. Expected YYYY-MM-DD')

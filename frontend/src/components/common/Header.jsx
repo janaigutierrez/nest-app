@@ -6,7 +6,7 @@ import { useState, useRef, useEffect } from 'react'
 
 const Header = () => {
     const { user, logout } = useAuth()
-    const { theme, toggleDarkMode, setTheme } = useTheme()
+    const { theme, toggleDarkMode } = useTheme()
     const location = useLocation()
     const navigate = useNavigate()
     const [isProfileDropdownOpen, setIsProfileDropdownOpen] = useState(false)
@@ -61,12 +61,12 @@ const Header = () => {
         setIsProfileDropdownOpen(false)
     }
 
-    const handleNotifications = () => {
-        // TODO: Implement notifications system
-        console.log('Opening notifications...')
-        alert('Notifications feature coming soon! 🔔')
-        setIsProfileDropdownOpen(false)
-    }
+    // TODO: Implement notifications system
+    // const handleNotifications = () => {
+    //     console.log('Opening notifications...')
+    //     alert('Notifications feature coming soon! 🔔')
+    //     setIsProfileDropdownOpen(false)
+    // }
 
     // Mock function to get notifications (replace with real logic later)
     const getNotifications = () => {

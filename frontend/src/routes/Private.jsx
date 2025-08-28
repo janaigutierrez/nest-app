@@ -7,7 +7,7 @@ import Stats from "../pages/private/Stats"
 import Profile from "../pages/private/Profile"
 import Agenda from "../pages/private/Agenda"
 
-const Private = ({ setRefreshHeader, logout }) => {
+const Private = ({ setRefreshHeader }) => {
     return (
         <QuestProvider>
             <Routes>
