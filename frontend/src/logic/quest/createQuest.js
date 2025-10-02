@@ -1,7 +1,15 @@
 import { errors, validator } from "common"
 import getLoggedUserId from "../helpers/getLoggedUserId"
 
-const createQuest = ({ title, useAI = false, difficulty = 'STANDARD' }) => {
+const createQuest = ({
+    title,
+    useAI = false,
+    difficulty = 'STANDARD',
+    isScheduled = false,
+    scheduledDate = null,
+    scheduledTime = null,
+    duration = 30
+}) => {
     validator.text(title, 200, 3, 'quest title')
     validator.difficulty(difficulty, 'difficulty')
 
@@ -10,6 +18,10 @@ const createQuest = ({ title, useAI = false, difficulty = 'STANDARD' }) => {
     if (!id) {
         throw new errors.AuthError('user not logged in')
     }
+
+    console.log('🔧 createQuest.js - Received params:', {
+        title, useAI, difficulty, isScheduled, scheduledDate, scheduledTime, duration
+    })
 
     return fetch(`${import.meta.env.VITE_API_URL}/api/quests/create`, {
         method: 'POST',
@@ -20,7 +32,11 @@ const createQuest = ({ title, useAI = false, difficulty = 'STANDARD' }) => {
         body: JSON.stringify({
             title: title.trim(),
             useAI,
-            difficulty
+            difficulty,
+            isScheduled,
+            scheduledDate,
+            scheduledTime,
+            duration
         })
     })
         .catch(error => { throw new errors.ConnectionError(error.message) })
@@ -30,7 +46,6 @@ const createQuest = ({ title, useAI = false, difficulty = 'STANDARD' }) => {
             } else {
                 return response.json().then(body => {
                     const errorMessage = body.error || body.message || 'Unknown error occurred'
-
                     const ErrorClass = errors[body.name] || errors.ServerError
                     throw new ErrorClass(errorMessage)
                 })

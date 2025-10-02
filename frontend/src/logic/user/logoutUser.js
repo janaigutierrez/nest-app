@@ -9,7 +9,9 @@ const logout = async () => {
                 method: 'POST',
                 headers: { 'Authorization': `Bearer ${token}` }
             }).catch(() => { })
-        } catch (error) { }
+        } catch {
+            // Silently handle logout errors
+        }
     }
 
     return true

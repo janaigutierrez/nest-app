@@ -16,11 +16,12 @@ const getSortedQuests = (quests, sortBy) => {
                 if (!b.targetStat) return -1
                 return a.targetStat.localeCompare(b.targetStat)
             })
-        case 'difficulty':
+        case 'difficulty': {
             const difficultyOrder = { 'EASY': 1, 'STANDARD': 2, 'HARD': 3, 'EPIC': 4 }
             return sorted.sort((a, b) => {
                 return (difficultyOrder[a.difficulty] || 2) - (difficultyOrder[b.difficulty] || 2)
             })
+        }
         case 'xp':
             return sorted.sort((a, b) => b.experienceReward - a.experienceReward)
         case 'recent':

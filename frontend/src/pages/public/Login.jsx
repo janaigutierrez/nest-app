@@ -33,7 +33,7 @@ function Login() {
             validator.email(formData.email, 'email')
             validator.password(formData.password, 'password')
 
-            const result = await logics.user.loginUser(formData)
+            await logics.user.loginUser(formData)
             await refreshUserData()
             navigate('/')
 

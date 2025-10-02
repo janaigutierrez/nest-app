@@ -16,7 +16,7 @@ function Stats() {
 
     const totalQuests = quests.length
     const completedQuests = quests.filter(q => q.isCompleted).length
-    const totalXP = quests.reduce((sum, q) => sum + (q.experienceReward || 0), 0)
+    // const totalXP = quests.reduce((sum, q) => sum + (q.experienceReward || 0), 0) // TODO: Use this for detailed stats
     const completionRate = totalQuests > 0 ? Math.round((completedQuests / totalQuests) * 100) : 0
 
     return (
