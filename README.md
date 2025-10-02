@@ -89,7 +89,7 @@ NEST App is a full-stack gamified agenda application that transforms daily tasks
 - PUT    /api/users/theme        - Update visual theme \
 - PUT    /api/users/avatar       - Update avatar configuration 
 
-### 👤 User Schema
+###  User Schema
 ```javascript
 {
   _id: ObjectId,
