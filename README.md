@@ -1,5 +1,5 @@
 # NEST APP
-![NEST App Screenshot](./captura-app.jpg)
+![NEST App Screenshot](./docs/captura-app.jpg)
 ## Description
 
 NEST App is a full-stack gamified agenda application that transforms daily tasks into epic quests. Users create missions, complete them to gain XP and level up, unlocking new features and developing their character stats through a comprehensive RPG-inspired progression system.
@@ -138,7 +138,7 @@ NEST App is a full-stack gamified agenda application that transforms daily tasks
 ```
 ### Test Coverage
 
-![Test Coverage](./coverage-screenshot.jpg)
+![Test Coverage](./docs/coverage-screenshot.jpg)
 
 ### Project
 
