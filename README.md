@@ -140,6 +140,31 @@ NEST App is a full-stack gamified agenda application that transforms daily tasks
 
 ![Test Coverage](./coverage-screenshot.jpg)
 
-### Project
+### Deployment
 
-[Nest App](http://nest-app.surge.sh)
+- **Frontend**: Netlify (auto-deploy from `frontend/`)
+- **Backend**: [Render](https://nest-app-is6t.onrender.com) (auto-deploy from `backend/`)
+- **Database**: MongoDB Atlas
+
+### Environment Setup
+
+Copy the example files and fill in your values:
+
+```bash
+cp frontend/.env.example frontend/.env
+cp backend/.env.example backend/.env
+```
+
+#### Frontend (`frontend/.env`)
+| Variable | Description |
+|----------|-------------|
+| `VITE_API_URL` | Backend URL (e.g. `http://localhost:3000` or Render URL) |
+
+#### Backend (`backend/.env`)
+| Variable | Description |
+|----------|-------------|
+| `PORT` | Server port (default: 3000) |
+| `MONGODB_URI` | MongoDB connection string |
+| `JWT_SECRET` | Secret key for JWT signing |
+| `GROQ_API_KEY` | Groq API key for AI quest generation |
+| `ALLOWED_ORIGINS` | Comma-separated allowed CORS origins (e.g. `https://nest-app.netlify.app`) |
