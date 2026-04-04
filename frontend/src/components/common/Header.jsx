@@ -105,6 +105,15 @@ function Header() {
                             📊 Stats
                         </Link>
                         <Link
+                            to="/agenda"
+                            className={`font-medium transition-colors ${isActive('/agenda')
+                                ? 'text-purple-600 dark:text-purple-400 border-b-2 border-purple-600 dark:border-purple-400 pb-1'
+                                : 'text-gray-600 dark:text-gray-300 hover:text-purple-600 dark:hover:text-purple-400'
+                                }`}
+                        >
+                            📅 Agenda
+                        </Link>
+                        <Link
                             to="/profile"
                             className={`font-medium transition-colors ${isActive('/profile')
                                 ? 'text-purple-600 dark:text-purple-400 border-b-2 border-purple-600 dark:border-purple-400 pb-1'
@@ -185,6 +194,15 @@ function Header() {
                             }`}
                     >
                         📊
+                    </Link>
+                    <Link
+                        to="/agenda"
+                        className={`px-3 py-2 rounded-lg text-sm font-medium transition-colors ${isActive('/agenda')
+                            ? 'bg-purple-100 dark:bg-purple-900 text-purple-600 dark:text-purple-400'
+                            : 'text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'
+                            }`}
+                    >
+                        📅
                     </Link>
                     <Link
                         to="/profile"
