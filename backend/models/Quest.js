@@ -269,7 +269,7 @@ questSchema.statics.getDailyQuestsForDate = function (userId, date = new Date())
 questSchema.index({ userId: 1, isCompleted: 1 })
 questSchema.index({ userId: 1, isDaily: 1 })
 questSchema.index({ userId: 1, createdAt: -1 })
-questSchema.index({ scheduledDate: 1 })
+questSchema.index({ userId: 1, scheduledDate: 1 })
 questSchema.index({ targetStat: 1 })
 
 let Quest
