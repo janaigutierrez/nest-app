@@ -63,9 +63,33 @@ const questSchema = new mongoose.Schema({
         default: null
     },
 
+    scheduledTime: {
+        type: String,
+        default: null,
+        validate: {
+            validator: function (v) {
+                if (!v) return true
+                return /^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/.test(v)
+            },
+            message: 'Invalid time format. Use HH:MM'
+        }
+    },
+
+    duration: {
+        type: Number,
+        default: 30,
+        min: [5, 'Duration must be at least 5 minutes'],
+        max: [480, 'Duration cannot exceed 8 hours']
+    },
+
+    isScheduled: {
+        type: Boolean,
+        default: false
+    },
+
     generatedBy: {
         type: String,
-        enum: ['user', 'ai', 'template', 'quick_add'],
+        enum: ['user', 'ai', 'template', 'quick_add', 'epic_fallback', 'ritual'],
         default: 'user'
     },
 
@@ -196,6 +220,23 @@ questSchema.methods.complete = async function () {
     return await this.save()
 }
 
+questSchema.methods.getScheduledDateTime = function () {
+    if (!this.scheduledDate || !this.scheduledTime) return null
+
+    const [hours, minutes] = this.scheduledTime.split(':').map(Number)
+    const dateTime = new Date(this.scheduledDate)
+    dateTime.setHours(hours, minutes, 0, 0)
+
+    return dateTime
+}
+
+questSchema.methods.getEndTime = function () {
+    const startTime = this.getScheduledDateTime()
+    if (!startTime) return null
+
+    return new Date(startTime.getTime() + this.duration * 60000)
+}
+
 questSchema.methods.updateXP = function (newXP) {
     if (newXP < 10 || newXP > 1000) {
         throw new Error('XP must be between 10 and 1000')
@@ -264,6 +305,23 @@ questSchema.statics.getDailyQuestsForDate = function (userId, date = new Date())
             $lte: endOfDay
         }
     })
+}
+
+questSchema.statics.getQuestsByDate = function (userId, date) {
+    const startOfDay = new Date(date)
+    startOfDay.setHours(0, 0, 0, 0)
+
+    const endOfDay = new Date(date)
+    endOfDay.setHours(23, 59, 59, 999)
+
+    return this.find({
+        userId,
+        isScheduled: true,
+        scheduledDate: {
+            $gte: startOfDay,
+            $lte: endOfDay
+        }
+    }).sort({ scheduledTime: 1 })
 }
 
 questSchema.index({ userId: 1, isCompleted: 1 })

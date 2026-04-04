@@ -6,6 +6,7 @@ import Dashboard from "../pages/private/Dashboard"
 import MyQuests from "../pages/private/MyQuests"
 import Stats from "../pages/private/Stats"
 import Profile from "../pages/private/Profile"
+import Agenda from "../pages/private/Agenda"
 
 const Private = ({ setRefreshHeader, logout }) => {
     return (
@@ -13,6 +14,7 @@ const Private = ({ setRefreshHeader, logout }) => {
             <Routes>
                 <Route path="/" element={<Dashboard />} />
                 <Route path="/my-quests" element={<MyQuests />} />
+                <Route path="/agenda" element={<Agenda />} />
                 <Route path="/stats" element={<Stats />} />
                 <Route path="/profile" element={<Profile updateHeader={setRefreshHeader} />} />
                 <Route path="/*" element={<NotFound />} />

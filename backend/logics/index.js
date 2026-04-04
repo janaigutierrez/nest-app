@@ -11,6 +11,8 @@ import updateUserAvatar from './updateUserAvatar.js'
 import updateUserEmail from './updateUserEmail.js'
 import updateUserTheme from './updateUserTheme.js'
 import updateUserUsername from './updateUserUsername.js'
+import getQuestsByDate from './getQuestsByDate.js'
+import updateQuest from './updateQuest.js'
 
 const logic = {
     loginUser,
@@ -26,6 +28,8 @@ const logic = {
     updateUserTheme,
     updateUserUsername,
     createQuest,
+    getQuestsByDate,
+    updateQuest,
 }
 
 export default logic
